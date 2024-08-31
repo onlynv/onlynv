@@ -4,6 +4,9 @@ OnlyNv is a drop-in replacement for [dotenv](https://npm.js.com/package/dotenv).
 
 This package is part of the broader [OnlyNv](https://github.com/onlynv/onlynv) project, which aims to provide a suite of tools to make working with environment variables easier.
 
+> [!NOTE]  
+> If you are on Node.js v20.0.0 or later, you can use the built-in `--env-file` flag to load environment variables from a file. **You do not need this library or `dotenv`**
+
 ## Installation
 
 ```bash
