@@ -1,0 +1,4 @@
+authority: @onlynv/cli
+connection: gXK1HCBRYrxpmuNE_ksVi
+apispec: 1
+include: packages/**/*.env

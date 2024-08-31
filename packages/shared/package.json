@@ -1,0 +1,12 @@
+{
+	"name": "@onlynv/shared",
+	"version": "0.0.0",
+	"exports": {
+		"./colors": {
+			"import": "./colors/index.ts"
+		},
+		"./structs/init": {
+			"import": "./structs/init/index.ts"
+		}
+	}
+}

@@ -1,0 +1,33 @@
+{
+	"name": "@onlynv/cli",
+	"version": "0.0.0",
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"nv": "node ./dist/bin.js"
+	},
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"main": "./dist/bin.js",
+	"bin": {
+		"nv": "./dist/bin.js"
+	},
+	"devDependencies": {
+		"@onlynv/shared": "workspace:*",
+		"@onlynv/tsconfig": "workspace:*",
+		"@types/args": "^5.0.3",
+		"@types/js-yaml": "^4.0.9",
+		"@types/node": "^22.4.0",
+		"@types/prompts": "^2.4.9",
+		"picocolors": "^1.0.1",
+		"typescript": "^5.5.4",
+		"vite": "^5.4.1"
+	},
+	"dependencies": {
+		"js-yaml": "^4.1.0",
+		"open": "^10.1.0",
+		"prompts": "^2.4.2"
+	}
+}

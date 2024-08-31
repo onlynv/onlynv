@@ -1,0 +1,154 @@
+.createproject {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	gap: 2rem;
+}
+
+.aside {
+	height: 100%;
+	width: clamp(200px, 30vw, 360px);
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	flex-shrink: 0;
+
+	.asideHeader {
+		font-size: 1.5rem;
+		color: var(--fg-0);
+		font-weight: 450;
+	}
+
+	.asideDesc {
+		font-size: 0.8rem;
+		color: var(--fg-4);
+		text-wrap: balance;
+	}
+
+	.asideAction {
+		margin-top: auto;
+	}
+}
+
+.main {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	overflow: hidden;
+}
+
+.integrationForm {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	gap: 1rem;
+	padding: 2rem;
+	border-radius: 8px;
+	border: 1px solid var(--fg-6);
+	background: var(--bg-1);
+	overflow: hidden;
+	container-type: inline-size;
+
+	.integrationFormHeader {
+		color: var(--fg-0);
+		font-size: 1rem;
+		font-style: normal;
+		font-weight: 400;
+	}
+
+	.integrationFormItems {
+		display: flex;
+		gap: 1rem;
+		height: fit-content;
+		overflow-x: auto;
+		scrollbar-width: none;
+
+		@property --bg {
+			syntax: '<color>';
+			initial-value: hsl(from var(--color) h s l / 0.1);
+		}
+
+		@container (width <= 41.5rem) {
+			mask-image: linear-gradient(
+				to right,
+				#fff 0%,
+				#fff calc(100% - 20px),
+				transparent 100%
+			);
+		}
+
+		.integrationFormItem {
+			display: flex;
+			padding: 1.5rem 1rem 1rem 1rem;
+			justify-content: center;
+			text-align: start;
+			align-items: flex-end;
+			gap: 1rem;
+			max-height: 200px;
+			width: 400px;
+			min-width: 200px;
+			aspect-ratio: 2 / 1;
+			border-radius: 0.5rem;
+			background-color: transparent;
+			background-image: radial-gradient(
+				153.42% 155.78% at 50% 0,
+				hsl(from var(--color) h s l / 0) 0%,
+				hsl(from var(--color) h s l / 0.1) 100%
+			);
+			background-position: 0 0;
+			background-size: 130% 130%;
+			background-repeat: no-repeat;
+			border: 1px solid var(--fg-6);
+			transition: background-position ease 0.2s;
+
+			&:focus-visible {
+				outline-offset: -2px;
+			}
+
+			&.integrationFormItemSelected {
+				background-image: radial-gradient(
+					153.42% 155.78% at 50% 0,
+					hsl(from var(--color) h s l / 0) 0%,
+					hsl(from var(--color) h s l / 0.2) 100%
+				);
+			}
+
+			&:hover {
+				background-position: 0 -30px;
+			}
+
+			.integrationFormItemContent {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				gap: 0.25rem;
+				width: 100%;
+
+				.integrationFormItemHeader {
+					color: var(--fg-0);
+					font-size: 0.8rem;
+					font-weight: 400;
+				}
+
+				.integrationFormItemDesc {
+					color: var(--fg-3);
+					font-size: 0.8rem;
+					font-weight: 400;
+				}
+			}
+		}
+	}
+}
+
+.projectForm {
+	display: grid;
+	gap: 1rem;
+	width: 100%;
+	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+
+	.projectFormButton {
+		grid-column: 2;
+	}
+}

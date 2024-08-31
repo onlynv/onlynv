@@ -1,0 +1,53 @@
+{
+	"name": "onlynv",
+	"description": "A smaller, faster, replacement for dotenv.",
+	"version": "0.1.0",
+	"author": "TheCommieAxolotl",
+	"license": "MIT",
+	"repository": {
+		"url": "https://github.com/onlynv/onlynv",
+		"type": "git",
+		"directory": "packages/onlynv"
+	},
+	"bugs": {
+		"url": "https://github.com/onlynv/onlynv/issues"
+	},
+	"homepage": "https://github.com/onlynv/onlynv/tree/main/packages/onlynv#readme",
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"test": "vitest",
+		"bench": "vitest bench",
+		"check-exports": "attw --pack ."
+	},
+	"types": "./index.d.ts",
+	"files": [
+		"dist",
+		"index.d.ts"
+	],
+	"type": "module",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs",
+			"types": "./index.d.ts"
+		},
+		"./config": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs",
+			"types": "./index.d.ts"
+		}
+	},
+	"devDependencies": {
+		"@onlynv/shared": "workspace:*",
+		"@onlynv/tsconfig": "workspace:*",
+		"@types/node": "^22.4.0",
+		"dotenv": "^16.4.5",
+		"typescript": "^5.5.4",
+		"vite": "^5.4.1",
+		"vite-plugin-dts": "^4.0.3",
+		"vitest": "^2.0.5"
+	}
+}

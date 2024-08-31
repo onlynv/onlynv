@@ -1,0 +1,20 @@
+{
+	"name": "onlynv",
+	"scripts": {
+		"build": "turbo build",
+		"dev": "turbo dev",
+		"lint": "turbo lint",
+		"test": "turbo test",
+		"format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+		"nv": "node ./packages/cli/dist/bin.js"
+	},
+	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.15.4",
+		"prettier": "^3.2.5",
+		"turbo": "^2.0.14"
+	},
+	"packageManager": "pnpm@8.15.6",
+	"engines": {
+		"node": ">=18"
+	}
+}

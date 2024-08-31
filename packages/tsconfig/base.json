@@ -1,0 +1,26 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"target": "esnext",
+		"lib": ["esnext"],
+		"allowJs": true,
+		"noEmit": true,
+		"resolveJsonModule": true,
+		"moduleDetection": "force",
+		"moduleResolution": "node",
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"baseUrl": "../",
+		"module": "preserve",
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"composite": true,
+		"paths": {
+			"@onlynv/*": ["packages/*"]
+		}
+	},
+	"exclude": ["**/dist/*"]
+}
