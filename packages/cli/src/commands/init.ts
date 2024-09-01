@@ -45,12 +45,19 @@ const poll = async <T>(
 };
 
 export default async (int: Interface) => {
+	if (int.flags['dry-run']) {
+		console.log(pc.yellow('Dry run:'), 'Would have initialised a project');
+
+		return;
+	}
+
 	const res = await fetch(URL + '/api/init', {
 		body: JSON.stringify({
 			sender: '@onlynv/cli',
 			sender_ip: getIp(),
 			sender_device: getDeviceName(),
-			sender_os: getOS()
+			sender_os: getOS(),
+			name: int.flags.name
 		}),
 		method: 'POST'
 	});
