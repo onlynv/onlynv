@@ -3,9 +3,17 @@ import pc from '@onlynv/shared/colors';
 const commands = [
 	{
 		name: 'version',
-		shortName: 'v',
+		shortName: '-v',
 		description: 'Get the version of the CLI',
-		flags: []
+		flags: [],
+		subcommands: []
+	},
+	{
+		name: 'help',
+		shortName: '-h',
+		description: 'Show this help message',
+		flags: [],
+		subcommands: []
 	},
 	{
 		name: 'init',
@@ -14,17 +22,28 @@ const commands = [
 		flags: [
 			{
 				name: 'name',
+				shortName: 'n',
 				description: 'Name of the project',
+				allowSolo: true,
 				required: false,
 				expectsValue: true
 			},
 			{
 				name: 'dry-run',
 				description: 'Dry run the command',
+				allowSolo: false,
 				expectsValue: false,
 				required: false
 			}
-		]
+		],
+		subcommands: []
+	},
+	{
+		name: 'glob',
+		shortName: 'g',
+		description: 'Search for included files',
+		flags: [],
+		subcommands: []
 	},
 	{
 		name: 'sync',
@@ -34,10 +53,63 @@ const commands = [
 			{
 				name: 'dry-run',
 				description: 'Dry run the command',
+				allowSolo: false,
 				expectsValue: false,
 				required: false
 			}
-		]
+		],
+		subcommands: []
+	},
+	{
+		name: 'key',
+		shortName: 'k',
+		description: 'Manage your bearer keys',
+		subcommands: [
+			{
+				name: 'add',
+				description: 'Add a new key',
+				flags: [
+					{
+						name: 'key',
+						shortName: 'k',
+						description: 'The key itself',
+						required: true,
+						allowSolo: true,
+						expectsValue: true
+					},
+					{
+						name: 'name',
+						shortName: 'n',
+						description: 'Name of the key',
+						required: false,
+						allowSolo: false,
+						expectsValue: true
+					}
+				],
+				subcommands: []
+			},
+			{
+				name: 'remove',
+				description: 'Remove a key',
+				flags: [
+					{
+						name: 'id',
+						description: 'id or name of the key',
+						required: true,
+						allowSolo: true,
+						expectsValue: true
+					}
+				],
+				subcommands: []
+			},
+			{
+				name: 'list',
+				description: 'List all keys',
+				flags: [],
+				subcommands: []
+			}
+		],
+		flags: []
 	}
 ] as const satisfies Command[];
 
@@ -46,21 +118,28 @@ export type Command = {
 	shortName?: string;
 	description: string;
 	flags: Flag[];
+	subcommands: Command[];
 };
 
 export type Flag = {
 	name: string;
 	shortName?: string;
 	description: string;
+	allowSolo: boolean;
 	required: boolean;
 	expectsValue: boolean;
 };
 
 export type Interface = {
 	isDefault: boolean;
-	command?: Command;
+	command?: Command & { name: (typeof commands)[number]['name'] };
+	subcommand?: Command & { name: (typeof commands)[number]['subcommands'][number]['name'] };
 	args: string[];
-	flags: Record<(typeof commands)[number]['flags'][number]['name'], string | boolean | undefined>;
+	flags: Record<
+		| (typeof commands)[number]['flags'][number]['name']
+		| (typeof commands)[number]['subcommands'][number]['flags'][number]['name'],
+		string | boolean | undefined
+	>;
 
 	showHelp: () => void;
 };
@@ -68,44 +147,25 @@ export type Interface = {
 export const createInterface = (): Interface => {
 	const args = process.argv.slice(2);
 
-	const command = args.find((arg) =>
-		commands.some((c) => c.name === arg || c.shortName === arg || `-${c.shortName}` === arg)
-	);
+	const command = args.find((arg) => commands.some((c) => c.name === arg || c.shortName === arg));
 
 	return {
 		isDefault: command === undefined,
-		command: commands.find(
-			(c) => c.name === command || c.shortName === command || `-${c.shortName}` === command
-		),
+		command: commands.find((c) => c.name === command || c.shortName === command),
 		args,
-		flags: args.reduce(
-			(acc, arg, i) => {
-				const cmd = commands.find(
-					(c) =>
-						c.name === command ||
-						c.shortName === command ||
-						`-${c.shortName}` === command
-				);
+		flags: getFlags(args),
+		subcommand: commands
+			.map((c) => c.subcommands)
+			.flat()
+			.find((c) => c.name === args[1]),
 
-				if (!cmd) return acc;
-
-				const flag = cmd.flags.find((f) => f.name === args[i + 1]);
-
-				if (!flag) return acc;
-
-				acc[flag.name] = (flag as Flag).expectsValue ? args[i + 2] : true;
-
-				return acc;
-			},
-			{} as Interface['flags']
-		),
 		showHelp: () => {
 			console.log(`Usage: nv ${pc.green('<command>')} ${pc.cyan('[options]')}\n`);
 
 			console.log('Commands:');
 
 			for (const c of commands) {
-				const shortName = c.shortName ? `-${c.shortName}` : '';
+				const shortName = c.shortName || '';
 
 				const start = `  ${pc.green(c.name)} (${pc.yellow(shortName)})`.padEnd(36);
 				const end = `${c.description} ${c.flags.some((f) => f.required) ? '(required)' : ''}`;
@@ -115,13 +175,78 @@ export const createInterface = (): Interface => {
 				for (const f of c.flags) {
 					console.log(
 						`    ${pc.cyan(f.name)} ${
-							'shortName' in f ? `(${pc.yellow('-' + f.shortName!)})` : ''
-						}`.padEnd(30) +
+							'shortName' in f ? `(${pc.yellow(f.shortName)})` : ''
+						}`.padEnd(40) +
 							f.description +
 							(f.required ? ' (required)' : '')
 					);
 				}
+
+				for (const sc of c.subcommands) {
+					console.log(`    ${pc.green(sc.name)}`.padEnd(40) + sc.description);
+
+					for (const f of sc.flags) {
+						console.log(
+							`      ${pc.cyan(f.name)} ${
+								'shortName' in f ? `(${pc.yellow(f.shortName)})` : ''
+							}`.padEnd(42) +
+								f.description +
+								(f.required ? ' (required)' : '')
+						);
+					}
+				}
 			}
 		}
 	};
+};
+
+const getFlags = (args: string[]): Record<string, string | boolean | undefined> => {
+	const flags: Record<string, string | boolean | undefined> = {};
+
+	const isSubcommand = commands.some((c) => c.subcommands.some((sc) => sc.name === args[1]));
+
+	const flagList =
+		isSubcommand ?
+			commands.flatMap((c) => c.subcommands).flatMap((sc) => sc.flags as Flag[])
+		:	commands.flatMap((c) => c.flags);
+
+	for (let i = isSubcommand ? 2 : 1; i < args.length; i++) {
+		const arg = args[i];
+
+		if (!arg) continue;
+
+		const flag = flagList.find(
+			(f) =>
+				f.name === arg ||
+				('shortName' in f && (f.shortName === arg || '-' + f.shortName === arg))
+		);
+
+		if (!flag) {
+			const solo = flagList.find((f) => f.allowSolo);
+
+			if (solo) {
+				if (flags[solo.name]) continue;
+
+				flags[solo.name] = arg;
+				continue;
+			}
+
+			console.log(`Unknown flag: ${arg}`);
+			continue;
+		}
+
+		if (flag.expectsValue) {
+			const nextArg = args[i + 1];
+
+			if (nextArg && !nextArg.startsWith('-')) {
+				flags[flag.name] = nextArg;
+			} else {
+				flags[flag.name] = true;
+			}
+		} else {
+			flags[flag.name] = true;
+		}
+	}
+
+	return flags;
 };

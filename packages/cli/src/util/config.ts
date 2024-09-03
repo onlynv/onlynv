@@ -1,4 +1,6 @@
 import yaml from 'js-yaml';
+import fs from 'node:fs';
+import path from 'node:path';
 
 type Config = {
 	authority: string;
@@ -14,4 +16,27 @@ export const makeConfig = (config: Partial<Config>, indent = 0): string => {
 
 export const readConfig = (config: string): Config => {
 	return yaml.load(config) as Config;
+};
+
+export const defaultConfig: Config = {
+	authority: '@onlynv/cli',
+	connection: '',
+	apispec: 1,
+	exclude: [],
+	include: ['**/.env*']
+};
+
+export const getConfig = (dir = process.cwd()): Config => {
+	const configPath = path.join(dir, '.lnvrc');
+
+	if (!fs.existsSync(configPath)) {
+		fs.writeFileSync(configPath, makeConfig(defaultConfig));
+	}
+
+	try {
+		return Object.assign(defaultConfig, readConfig(fs.readFileSync(configPath, 'utf-8')));
+	} catch (e) {
+		console.error('Failed to read config:', Error(e as string).message);
+		return defaultConfig;
+	}
 };
