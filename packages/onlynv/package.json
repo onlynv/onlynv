@@ -18,7 +18,8 @@
 		"dev": "vite build --watch",
 		"test": "vitest",
 		"bench": "vitest bench",
-		"check-exports": "attw --pack ."
+		"check-exports": "attw --pack .",
+		"prepublishOnly": "vite build"
 	},
 	"types": "./index.d.ts",
 	"files": [
