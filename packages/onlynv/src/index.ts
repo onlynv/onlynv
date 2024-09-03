@@ -3,6 +3,8 @@ import { resolve } from 'node:path';
 
 import { parse, type DotenvParseOutput } from './parse';
 
+export { parse };
+
 export interface DotenvConfigOptions {
 	path?: string | string[] | URL;
 	encoding?: BufferEncoding;

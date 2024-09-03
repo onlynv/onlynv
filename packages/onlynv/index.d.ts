@@ -21,4 +21,9 @@ export interface DotenvPopulateInput {
 	[name: string]: string | undefined;
 }
 
+export interface DotenvParseOutput {
+	[name: string]: string;
+}
+
 export function config(options?: DotenvConfigOptions): DotenvConfigOutput;
+export function parse(src: string | Buffer): DotenvParseOutput;
