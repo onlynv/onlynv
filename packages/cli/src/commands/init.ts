@@ -8,6 +8,7 @@ import type { InitResponse, InitStatusResponse } from '@onlynv/shared/structs/in
 import { getIp, getDeviceName, getOS } from '../util/os';
 import { makeConfig } from '../util/config';
 import { getConfirmation } from '../util/input';
+import { resolveWorkspace } from '../util/workspace';
 
 const URL = process.env.npm_lifecycle_script ? 'http://localhost:3000' : 'https://onlynv.dev';
 
@@ -45,6 +46,14 @@ const poll = async <T>(
 };
 
 export default async (int: Interface) => {
+	const workspace = resolveWorkspace();
+
+	if (workspace === process.cwd()) {
+		console.error('Cannot initialize new project in workspace root');
+
+		return;
+	}
+
 	if (int.flags['dry-run']) {
 		console.log(pc.yellow('Dry run:'), 'Would have initialised a project');
 
