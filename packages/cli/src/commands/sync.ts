@@ -43,7 +43,9 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	console.log(pc.yellow(`Syncing ${basename(workspace)} (${config.connection})`));
 	console.log();
 
-	const files = await glob(int, false);
+	const files = await glob(int);
+
+	console.log('');
 
 	const data: Record<string, string> = {};
 
@@ -52,12 +54,20 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		data[filepath] = readFileSync(file, 'utf-8');
 	}
 
-	const encrypted = publicEncrypt(pubKey, Buffer.from(JSON.stringify(data))).toString('base64');
+	const chunks = JSON.stringify(data).match(/.{1,255}/g) || [];
 
-	console.log(encrypted, URL + `/api/projects/${config.connection}/sync`);
+	console.log(pc.yellow('Encrypting data...'));
+
+	const encrypted = [];
+
+	for (const chunk of chunks) {
+		encrypted.push(publicEncrypt(pubKey, Buffer.from(chunk)).toString('base64'));
+	}
+
+	console.log(pc.yellow('Sending data to server...'));
 
 	const res = await fetch(URL + `/api/projects/${config.connection}/sync`, {
-		body: encrypted,
+		body: encrypted.join('::'),
 		headers: {
 			Authorization: `Bearer ${bearer}`
 		},
