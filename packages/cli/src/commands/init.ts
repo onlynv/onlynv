@@ -9,8 +9,12 @@ import { getIp, getDeviceName, getOS } from '../util/os';
 import { makeConfig } from '../util/config';
 import { getConfirmation } from '../util/input';
 import { resolveWorkspace } from '../util/workspace';
+import { argv } from 'process';
 
-const URL = process.env.npm_lifecycle_script ? 'http://localhost:3000' : 'https://onlynv.dev';
+const URL =
+	process.env.npm_lifecycle_script || argv.includes('DEV') ?
+		'http://localhost:3000'
+	:	'https://onlynv.dev';
 
 const poll = async <T>(
 	cb: (

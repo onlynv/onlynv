@@ -8,8 +8,12 @@ import { resolveWorkspace } from '../util/workspace';
 import glob from './glob';
 import { readFileSync } from 'node:fs';
 import { publicEncrypt } from 'node:crypto';
+import { argv } from 'node:process';
 
-const URL = process.env.npm_lifecycle_script ? 'http://localhost:3000' : 'https://onlynv.dev';
+const URL =
+	process.env.npm_lifecycle_script || argv.includes('DEV') ?
+		'http://localhost:3000'
+	:	'https://onlynv.dev';
 
 export default async (int: Interface) => {
 	const workspace = resolveWorkspace();
