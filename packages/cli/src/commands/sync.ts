@@ -96,7 +96,10 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		json += decrypted;
 	}
 
-	const newData = JSON.parse(json) as Record<string, Record<string, string>>;
+	const newData = JSON.parse(json) as Record<
+		string,
+		Record<string, { value: string; local: string; production: string }>
+	>;
 
 	console.log(pc.yellow('Received data from server'));
 
@@ -111,10 +114,12 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	process.exit(0);
 };
 
-const assembleEnv = (content: Record<string, string>) => {
+const assembleEnv = (
+	content: Record<string, { value: string; local: string; production: string }>
+) => {
 	let env = '';
 
-	for (const [key, value] of Object.entries(content)) {
+	for (const [key, { value }] of Object.entries(content)) {
 		if (/[\s]/.test(value)) {
 			env += `${key}="${value}"\n`;
 		} else {
