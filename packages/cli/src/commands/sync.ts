@@ -6,9 +6,10 @@ import { getConfig } from '../util/config';
 import { getKey } from '../util/storage';
 import { resolveWorkspace } from '../util/workspace';
 import glob from './glob';
-import { readFileSync } from 'node:fs';
-import { publicEncrypt } from 'node:crypto';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { publicDecrypt, publicEncrypt } from 'node:crypto';
 import { argv } from 'node:process';
+import path from 'node:path';
 
 const URL =
 	process.env.npm_lifecycle_script || argv.includes('DEV') ?
@@ -78,4 +79,48 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		console.log(pc.red('Failed to sync project'));
 		process.exit(1);
 	}
+
+	const newEncrypted = await res.text();
+
+	if (!newEncrypted) {
+		console.log(pc.red('Synced but did not receive any data from server'));
+		process.exit(1);
+	}
+
+	const newChunks = newEncrypted.split('::');
+
+	let json = '';
+
+	for (const chunk of newChunks) {
+		const decrypted = publicDecrypt(pubKey, Buffer.from(chunk, 'base64')).toString('utf-8');
+		json += decrypted;
+	}
+
+	const newData = JSON.parse(json) as Record<string, Record<string, string>>;
+
+	console.log(pc.yellow('Received data from server'));
+
+	for (const [file, content] of Object.entries(newData)) {
+		console.log(pc.green(`Writing ${file}`));
+
+		writeFileSync(path.resolve(workspace, file), assembleEnv(content));
+	}
+
+	console.log(pc.green('Synced project'));
+
+	process.exit(0);
+};
+
+const assembleEnv = (content: Record<string, string>) => {
+	let env = '';
+
+	for (const [key, value] of Object.entries(content)) {
+		if (/[\s]/.test(value)) {
+			env += `${key}="${value}"\n`;
+		} else {
+			env += `${key}=${value}\n`;
+		}
+	}
+
+	return env;
 };
