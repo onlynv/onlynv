@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { parse, type DotenvParseOutput } from './parse';
+import { type DotenvParseOutput, parse } from './parse';
 
 export { parse };
 

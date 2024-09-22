@@ -1,15 +1,14 @@
-import type { Interface } from '../interface';
-import open from 'open';
 import pc from '@onlynv/shared/colors';
-
-import fs from 'fs';
-
 import type { InitResponse, InitStatusResponse } from '@onlynv/shared/structs/init';
-import { getIp, getDeviceName, getOS } from '../util/os';
+import fs from 'fs';
+import open from 'open';
+import { argv } from 'process';
+
+import type { Interface } from '../interface';
 import { makeConfig } from '../util/config';
 import { getConfirmation } from '../util/input';
+import { getDeviceName, getIp, getOS } from '../util/os';
 import { resolveWorkspace } from '../util/workspace';
-import { argv } from 'process';
 
 const URL =
 	process.env.npm_lifecycle_script || argv.includes('DEV') ?

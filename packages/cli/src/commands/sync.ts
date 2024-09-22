@@ -1,15 +1,15 @@
 import pc from '@onlynv/shared/colors';
+import { publicDecrypt, publicEncrypt } from 'node:crypto';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
-import type { Interface } from '../interface';
+import path from 'node:path';
+import { argv } from 'node:process';
 
+import type { Interface } from '../interface';
 import { getConfig } from '../util/config';
 import { getKey } from '../util/storage';
 import { resolveWorkspace } from '../util/workspace';
 import glob from './glob';
-import { readFileSync, writeFileSync } from 'node:fs';
-import { publicDecrypt, publicEncrypt } from 'node:crypto';
-import { argv } from 'node:process';
-import path from 'node:path';
 
 const URL =
 	process.env.npm_lifecycle_script || argv.includes('DEV') ?

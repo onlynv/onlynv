@@ -1,11 +1,12 @@
-import pkj from '../package.json';
-import init from './commands/init';
-import glob from './commands/glob';
-import { createInterface } from './interface';
 import pc from '@onlynv/shared/colors';
+
+import pkj from '../package.json';
+import glob from './commands/glob';
+import init from './commands/init';
 import sync from './commands/sync';
-import { getAllKeys, setKey } from './util/storage';
+import { createInterface } from './interface';
 import { getConfig } from './util/config';
+import { getAllKeys, setKey } from './util/storage';
 import { resolveWorkspace } from './util/workspace';
 
 const int = createInterface();

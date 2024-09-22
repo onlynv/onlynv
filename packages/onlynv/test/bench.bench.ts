@@ -1,8 +1,8 @@
+import { config as dconfig, parse as dparse } from 'dotenv';
 import { bench, describe } from 'vitest';
 
-import { parse as dparse, config as dconfig } from 'dotenv';
-import { parse } from '../src/parse';
 import { config } from '../src';
+import { parse } from '../src/parse';
 
 const dotenvtest = `BASIC=basic
 

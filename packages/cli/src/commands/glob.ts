@@ -1,9 +1,8 @@
+import pc from '@onlynv/shared/colors';
+import glob from 'fast-glob';
+
 import type { Interface } from '../interface';
 import { getConfig } from '../util/config';
-
-import pc from '@onlynv/shared/colors';
-
-import glob from 'fast-glob';
 
 export default async (int: Interface, log = true) => {
 	const config = getConfig();
