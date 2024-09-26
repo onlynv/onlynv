@@ -8,10 +8,18 @@ const commands = [
 		flags: [],
 		subcommands: []
 	},
+
 	{
 		name: 'help',
 		shortName: '-h',
 		description: 'Show this help message',
+		flags: [],
+		subcommands: []
+	},
+	{
+		name: 'link',
+		shortName: '-l',
+		description: "Link your project's environment",
 		flags: [],
 		subcommands: []
 	},

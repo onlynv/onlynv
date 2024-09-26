@@ -15,7 +15,7 @@ const URL =
 		'http://localhost:3000'
 	:	'https://onlynv.dev';
 
-const poll = async <T>(
+export const poll = async <T>(
 	cb: (
 		delay: (ms: number) => Promise<void>,
 		cancel: () => void,

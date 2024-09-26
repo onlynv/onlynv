@@ -3,6 +3,7 @@ import pc from '@onlynv/shared/colors';
 import pkj from '../package.json';
 import glob from './commands/glob';
 import init from './commands/init';
+import link from './commands/link';
 import sync from './commands/sync';
 import { createInterface } from './interface';
 import { getConfig } from './util/config';
@@ -24,6 +25,9 @@ switch (int.command?.name) {
 		break;
 	case 'init':
 		init(int);
+		break;
+	case 'link':
+		link(int);
 		break;
 	case 'glob':
 		glob(int);
