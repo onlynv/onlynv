@@ -1,5 +1,6 @@
 export type LinkResponse = {
-	success: boolean;
-	bearer: string;
-	public: string;
+	success?: boolean;
+	error?: string;
+	bearer?: string;
+	public?: string;
 };
