@@ -19,6 +19,11 @@ const URL =
 export default async (int: Interface) => {
 	const workspace = resolveWorkspace();
 
+	if (!workspace) {
+		console.error(pc.red('No workspace found.'));
+		process.exit(1);
+	}
+
 	const config = getConfig(workspace);
 	const pubKey = getKey(config.connection, 'default');
 	const bearer = getKey(config.connection, 'bearer');
@@ -46,12 +51,17 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 
 	const files = await glob(int);
 
+	if (!files) {
+		console.log(pc.red('No files found'));
+		process.exit(1);
+	}
+
 	console.log('');
 
 	const data: Record<string, string> = {};
 
 	for (const file of files) {
-		const filepath = file.replace(workspace, '');
+		const filepath = file.replace(workspace + '/', '');
 		data[filepath] = readFileSync(file, 'utf-8');
 	}
 
@@ -105,6 +115,11 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 
 	for (const [file, content] of Object.entries(newData)) {
 		console.log(pc.green(`Writing ${file}`));
+
+		if (file.startsWith('/')) {
+			console.error(pc.red('Invalid file path, will not write:'), file);
+			continue;
+		}
 
 		writeFileSync(path.resolve(workspace, file), assembleEnv(content));
 	}

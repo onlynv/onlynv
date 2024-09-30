@@ -1,5 +1,5 @@
 authority: '@onlynv/cli'
 connection: d0EZ_44_FMynIJE2L0KGh
 apispec: 1
-include: packages/**/.env*
+include: '**/packages/**/.env*'
 exclude: '**/test/**/*'
