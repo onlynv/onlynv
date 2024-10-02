@@ -72,18 +72,24 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	const encrypted = [];
 
 	for (const chunk of chunks) {
-		encrypted.push(publicEncrypt(pubKey, Buffer.from(chunk)).toString('base64'));
+		encrypted.push(
+			publicEncrypt(pubKey, new Uint8Array(Buffer.from(chunk))).toString('base64')
+		);
 	}
 
 	console.log(pc.yellow('Sending data to server...'));
 
-	const res = await fetch(URL + `/api/projects/${config.connection}/sync`, {
-		body: encrypted.join('::'),
-		headers: {
-			Authorization: `Bearer ${bearer}`
-		},
-		method: 'POST'
-	});
+	const res = await fetch(
+		URL +
+			`/api/projects/${config.connection}/sync?strategy=${encodeURIComponent(int.flags.strategy || 'merge')}`,
+		{
+			body: encrypted.join('::'),
+			headers: {
+				Authorization: `Bearer ${bearer}`
+			},
+			method: 'POST'
+		}
+	);
 
 	if (!res.ok) {
 		console.log(pc.red('Failed to sync project'));
@@ -102,7 +108,10 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	let json = '';
 
 	for (const chunk of newChunks) {
-		const decrypted = publicDecrypt(pubKey, Buffer.from(chunk, 'base64')).toString('utf-8');
+		const decrypted = publicDecrypt(
+			pubKey,
+			new Uint8Array(Buffer.from(chunk, 'base64'))
+		).toString('utf-8');
 		json += decrypted;
 	}
 

@@ -64,6 +64,13 @@ const commands = [
 				allowSolo: false,
 				expectsValue: false,
 				required: false
+			},
+			{
+				name: 'strategy',
+				description: 'The strategy to use for syncing',
+				allowSolo: true,
+				expectsValue: true,
+				required: false
 			}
 		],
 		subcommands: []
@@ -213,10 +220,14 @@ const getFlags = (args: string[]): Record<string, string | boolean | undefined> 
 
 	const isSubcommand = commands.some((c) => c.subcommands.some((sc) => sc.name === args[1]));
 
-	const flagList =
+	const command =
 		isSubcommand ?
-			commands.flatMap((c) => c.subcommands).flatMap((sc) => sc.flags as Flag[])
-		:	commands.flatMap((c) => c.flags);
+			commands.flatMap((c) => c.subcommands).find((sc) => sc.name === args[1])
+		:	commands.find((c) => c.name === args[0]);
+
+	if (!command) return flags;
+
+	const flagList = command.flags;
 
 	for (let i = isSubcommand ? 2 : 1; i < args.length; i++) {
 		const arg = args[i];
