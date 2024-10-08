@@ -91,6 +91,12 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		}
 	);
 
+	if (res.status === 401) {
+		console.log(pc.red('Invalid Access Token!\nPlease run `nv link` to re-authenticate'));
+
+		process.exit(1);
+	}
+
 	if (!res.ok) {
 		console.log(pc.red('Failed to sync project'));
 		process.exit(1);
