@@ -24,16 +24,16 @@ switch (int.command?.name) {
 		console.log(`${pc.yellow(pkj.name)} ${pc.green('v' + pkj.version)}`);
 		break;
 	case 'init':
-		init(int);
+		await init(int);
 		break;
 	case 'link':
-		link(int);
+		await link(int);
 		break;
 	case 'glob':
-		glob(int);
+		await glob(int);
 		break;
 	case 'sync':
-		sync(int);
+		await sync(int);
 		break;
 	case 'key': {
 		switch (int.subcommand?.name) {
@@ -73,6 +73,7 @@ switch (int.command?.name) {
 
 	default:
 		int.showHelp();
-
-		process.exit();
 }
+
+// clean up any open handles
+process.exit();

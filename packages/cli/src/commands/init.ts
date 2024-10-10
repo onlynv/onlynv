@@ -3,6 +3,7 @@ import type { InitResponse, InitStatusResponse } from '@onlynv/shared/structs/in
 import fs from 'fs';
 import open from 'open';
 import { argv } from 'process';
+import readline from 'readline';
 
 import type { Interface } from '../interface';
 import { makeConfig } from '../util/config';
@@ -78,8 +79,29 @@ export default async (int: Interface) => {
 		const init = (await res.json()) as InitResponse;
 
 		console.log(pc.yellow('Initialising Project...'));
+		console.log();
 
-		open(init.redirect_url);
+		console.log('Press ENTER to open in browser:');
+		console.log(pc.green(init.redirect_url));
+
+		readline.emitKeypressEvents(process.stdin);
+		process.stdin.setRawMode(true);
+
+		const h: (_: unknown, data: { name: string; ctrl: boolean }) => void = (_, data) => {
+			if (data.name === 'return') {
+				open(init.redirect_url);
+
+				process.stdin.off('keypress', h);
+			}
+
+			if (data.name === 'escape' || (data.ctrl && data.name === 'c')) {
+				process.exit();
+			}
+		};
+
+		process.stdin.on('keypress', h);
+
+		console.log();
 
 		const created = await poll<InitStatusResponse>(async (delay, cancel, resolve) => {
 			try {
