@@ -109,7 +109,19 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		process.exit(1);
 	}
 
-	const newChunks = newEncrypted.split('::');
+	const [newChunkData, messages] = newEncrypted.split('\n\r\n');
+
+	if (!newChunkData) {
+		console.log(pc.red('Synced but did not receive any data from server'));
+
+		for (const message of messages?.split('\n') || []) {
+			console.log(message);
+		}
+
+		process.exit(1);
+	}
+
+	const newChunks = newChunkData?.split('::');
 
 	let json = '';
 
@@ -140,6 +152,10 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	}
 
 	console.log(pc.green('Synced project'));
+
+	for (const message of messages?.split('\n') || []) {
+		console.log(message);
+	}
 
 	process.exit(0);
 };
