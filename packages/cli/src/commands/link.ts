@@ -51,7 +51,15 @@ export default async (int: Interface) => {
 			headers: {
 				'Content-Type': 'application/json'
 			}
+		}).catch((e) => {
+			return e;
 		});
+
+		if (res instanceof Error) {
+			console.log(pc.red('Could not establish connection with server'));
+
+			process.exit(1);
+		}
 
 		if (res.status === 200) {
 			const json = (await res.json()) as LinkResponse;

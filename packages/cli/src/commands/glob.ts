@@ -41,7 +41,8 @@ export default async (int: Interface, log = true) => {
 			});
 	}
 
-	if (log) console.log(files.map((file) => '\t' + file.replace(workspace + '/', '')).join('\n'));
+	if (log)
+		console.log(files.map((file) => '    ' + file.replace(workspace + '/', '')).join('\n'));
 
 	return files;
 };

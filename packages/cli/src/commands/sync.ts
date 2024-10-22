@@ -56,8 +56,6 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		process.exit(1);
 	}
 
-	console.log('');
-
 	const data: Record<string, string> = {};
 
 	for (const file of files) {
@@ -66,6 +64,8 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	}
 
 	const chunks = JSON.stringify(data).match(/.{1,255}/g) || [];
+
+	console.log();
 
 	const encryptionSpinner = createSpinner(pc.yellow('Encrypting data...'));
 
@@ -81,6 +81,8 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 
 	encryptionSpinner.success({ text: pc.green('Encrypted data') });
 
+	console.log();
+
 	const dataSpinner = createSpinner(pc.yellow('Sending data to server...'));
 
 	dataSpinner.start();
@@ -95,7 +97,17 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 			},
 			method: 'POST'
 		}
-	);
+	).catch((e) => {
+		return e;
+	});
+
+	if (res instanceof Error) {
+		dataSpinner.error({
+			text: pc.red('Could not establish connection with server')
+		});
+
+		process.exit(1);
+	}
 
 	if (res.status === 401) {
 		dataSpinner.error({
@@ -131,7 +143,7 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 
 	dataSpinner.success({ text: pc.green('Sent data') });
 
-	console.log('');
+	console.log();
 
 	const newDataSpinner = createSpinner(pc.yellow('Decrypting data from server...'));
 

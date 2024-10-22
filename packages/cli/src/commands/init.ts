@@ -73,7 +73,15 @@ export default async (int: Interface) => {
 			name: int.flags.name
 		}),
 		method: 'POST'
+	}).catch((e) => {
+		return e;
 	});
+
+	if (res instanceof Error) {
+		text: pc.red('Could not establish connection with server');
+
+		process.exit(1);
+	}
 
 	try {
 		const init = (await res.json()) as InitResponse;
