@@ -50,9 +50,9 @@ export const poll = async <T>(
 };
 
 export default async (int: Interface) => {
-	const workspace = resolveWorkspace();
+	const workspace = resolveWorkspace(process.cwd(), false);
 
-	if (workspace === process.cwd()) {
+	if (workspace && workspace === process.cwd()) {
 		console.error('Cannot initialize new project in workspace root');
 
 		return;

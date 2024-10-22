@@ -30,7 +30,9 @@ export const getConfig = (dir = process.cwd()): Config => {
 	const configPath = path.join(dir, '.lnvrc');
 
 	if (!fs.existsSync(configPath)) {
-		fs.writeFileSync(configPath, makeConfig(defaultConfig));
+		console.warn("No '.lnvrc' file found in current directory.");
+		console.warn('Using default configuration.');
+		return defaultConfig;
 	}
 
 	try {

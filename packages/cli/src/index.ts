@@ -11,7 +11,7 @@ import { getAllKeys, setKey } from './util/storage';
 import { resolveWorkspace } from './util/workspace';
 
 const int = createInterface();
-const config = getConfig(resolveWorkspace());
+const config = getConfig(resolveWorkspace(process.cwd(), false));
 
 if (int.isDefault) {
 	int.showHelp();
