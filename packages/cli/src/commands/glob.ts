@@ -1,5 +1,6 @@
 import pc from '@onlynv/shared/colors';
 import { fdir } from 'fdir';
+import { createSpinner } from 'nanospinner';
 import picomatch from 'picomatch';
 
 import type { Interface } from '../interface';
@@ -16,9 +17,9 @@ export default async (int: Interface, log = true) => {
 
 	const config = getConfig(workspace);
 
-	if (log) console.log(pc.yellow('Globbing files...'));
+	const spinner = createSpinner(pc.yellow('Globbing files...'));
 
-	if (log) console.log();
+	if (log) spinner.start();
 
 	const files = await new fdir()
 		.withGlobFunction(picomatch)
@@ -30,12 +31,17 @@ export default async (int: Interface, log = true) => {
 		.crawl(workspace)
 		.withPromise();
 
-	if (log) console.log(files.map((file) => file.replace(workspace + '/', '')).join('\n'));
-
 	if (!files || !files.length) {
-		if (log) console.log(pc.red('No files found'));
+		if (log) spinner.error({ text: pc.red('No files found') });
 		return;
+	} else {
+		if (log)
+			spinner.success({
+				text: pc.green(`Found ${files.length} files`)
+			});
 	}
+
+	if (log) console.log(files.map((file) => '\t' + file.replace(workspace + '/', '')).join('\n'));
 
 	return files;
 };

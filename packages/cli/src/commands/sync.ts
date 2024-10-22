@@ -1,4 +1,5 @@
 import pc from '@onlynv/shared/colors';
+import { createSpinner } from 'nanospinner';
 import { publicDecrypt, publicEncrypt } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
@@ -52,7 +53,6 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	const files = await glob(int);
 
 	if (!files) {
-		console.log(pc.red('No files found'));
 		process.exit(1);
 	}
 
@@ -67,7 +67,9 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 
 	const chunks = JSON.stringify(data).match(/.{1,255}/g) || [];
 
-	console.log(pc.yellow('Encrypting data...'));
+	const encryptionSpinner = createSpinner(pc.yellow('Encrypting data...'));
+
+	encryptionSpinner.start();
 
 	const encrypted = [];
 
@@ -77,7 +79,11 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		);
 	}
 
-	console.log(pc.yellow('Sending data to server...'));
+	encryptionSpinner.success({ text: pc.green('Encrypted data') });
+
+	const dataSpinner = createSpinner(pc.yellow('Sending data to server...'));
+
+	dataSpinner.start();
 
 	const res = await fetch(
 		URL +
@@ -92,27 +98,29 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	);
 
 	if (res.status === 401) {
-		console.log(pc.red('Invalid Access Token!\nPlease run `nv link` to re-authenticate'));
+		dataSpinner.error({
+			text: pc.red('Invalid Access Token!\nPlease run `nv link` to re-authenticate')
+		});
 
 		process.exit(1);
 	}
 
 	if (!res.ok) {
-		console.log(pc.red('Failed to sync project'));
+		dataSpinner.error({ text: pc.red('Failed to sync project (ERR_CODE_' + res.status + ')') });
 		process.exit(1);
 	}
 
 	const newEncrypted = await res.text();
 
 	if (!newEncrypted) {
-		console.log(pc.red('Synced but did not receive any data from server'));
+		dataSpinner.error({ text: pc.red('Synced but did not receive any data from server') });
 		process.exit(1);
 	}
 
 	const [newChunkData, messages] = newEncrypted.split('\n\r\n');
 
 	if (!newChunkData) {
-		console.log(pc.red('Synced but did not receive any data from server'));
+		dataSpinner.error({ text: pc.red('Synced but did not receive any data from server') });
 
 		for (const message of messages?.split('\n') || []) {
 			console.log(message);
@@ -120,6 +128,14 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 
 		process.exit(1);
 	}
+
+	dataSpinner.success({ text: pc.green('Sent data') });
+
+	console.log('');
+
+	const newDataSpinner = createSpinner(pc.yellow('Decrypting data from server...'));
+
+	newDataSpinner.start();
 
 	const newChunks = newChunkData?.split('::');
 
@@ -138,7 +154,7 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		Record<string, { value: string; local: string; production: string }>
 	>;
 
-	console.log(pc.yellow('Received data from server'));
+	newDataSpinner.success({ text: pc.green('Decrypted data from server') });
 
 	for (const [file, content] of Object.entries(newData)) {
 		console.log(pc.green(`Writing ${file}`));
