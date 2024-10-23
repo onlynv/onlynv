@@ -1,12 +1,13 @@
 import pc from '@onlynv/shared/colors';
 import type { LinkResponse } from '@onlynv/shared/structs/link';
 import crypto from 'node:crypto';
+import fs from 'node:fs';
 import { argv } from 'node:process';
 import readline from 'node:readline';
 import open from 'open';
 
 import type { Interface } from '../interface';
-import { getConfig } from '../util/config';
+import { getConfig, makeConfig } from '../util/config';
 import { setKey } from '../util/storage';
 import { resolveWorkspace } from '../util/workspace';
 import { poll } from './init';
@@ -17,8 +18,25 @@ const URL =
 	:	'https://onlynv.dev';
 
 export default async (int: Interface) => {
-	const workspace = resolveWorkspace();
+	const workspace = resolveWorkspace(process.cwd(), false);
 	const config = getConfig(workspace);
+
+	if (!(workspace && config.connection)) {
+		if (!int.flags.id) {
+			console.error(pc.red('No workspace found. Please specify a project id with -i'));
+
+			process.exit(1);
+		}
+
+		await fs.promises.writeFile(
+			'.lnvrc',
+			makeConfig({
+				authority: '@onlynv/cli',
+				connection: int.flags.id as string,
+				apispec: 1
+			})
+		);
+	}
 
 	console.log(pc.yellow('Linking project...'));
 	console.log();
@@ -26,14 +44,14 @@ export default async (int: Interface) => {
 	const iv = crypto.randomBytes(16).toString('hex');
 
 	console.log('Press ENTER to open in browser:');
-	console.log(`${URL}/api/projects/${config.connection}/link/${iv}`);
+	console.log(`${URL}/api/projects/${config.connection || int.flags.id}/link/${iv}`);
 
 	readline.emitKeypressEvents(process.stdin);
 	process.stdin.setRawMode(true);
 
 	const h: (_: unknown, data: { name: string; ctrl: boolean }) => void = (_, data) => {
 		if (data.name === 'return') {
-			open(`${URL}/api/projects/${config.connection}/link/${iv}`);
+			open(`${URL}/api/projects/${config.connection || int.flags.id}/link/${iv}`);
 
 			process.stdin.off('keypress', h);
 		}
@@ -46,12 +64,15 @@ export default async (int: Interface) => {
 	process.stdin.on('keypress', h);
 
 	const res = await poll<LinkResponse>(async (delay, cancel, resolve) => {
-		const res = await fetch(`${URL}/api/projects/${config.connection}/link/${iv}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
+		const res = await fetch(
+			`${URL}/api/projects/${config.connection || int.flags.id}/link/${iv}`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			}
-		}).catch((e) => {
+		).catch((e) => {
 			return e;
 		});
 
@@ -88,8 +109,8 @@ export default async (int: Interface) => {
 
 	console.log();
 
-	setKey(config.connection, 'default', res.public);
-	setKey(config.connection, 'bearer', res.bearer);
+	setKey(config.connection || (int.flags.id as string), 'default', res.public);
+	setKey(config.connection || (int.flags.id as string), 'bearer', res.bearer);
 
 	console.log(pc.green('Connection details saved'));
 };

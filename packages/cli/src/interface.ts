@@ -20,7 +20,16 @@ const commands = [
 		name: 'link',
 		shortName: '-l',
 		description: "Link your project's environment",
-		flags: [],
+		flags: [
+			{
+				name: 'id',
+				shortName: 'i',
+				description: 'The id of the project to link',
+				allowSolo: true,
+				required: false,
+				expectsValue: true
+			}
+		],
 		subcommands: []
 	},
 	{

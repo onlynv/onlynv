@@ -11,7 +11,7 @@ type Config = {
 };
 
 export const makeConfig = (config: Partial<Config>, indent = 0): string => {
-	return yaml.dump(config, { indent });
+	return yaml.dump({ ...defaultConfig, ...config }, { indent });
 };
 
 export const readConfig = (config: string): Config => {
@@ -26,10 +26,14 @@ export const defaultConfig: Config = {
 	include: ['**/.env*']
 };
 
+let hasWarned = false;
+
 export const getConfig = (dir = process.cwd()): Config => {
 	const configPath = path.join(dir, '.lnvrc');
 
 	if (!fs.existsSync(configPath)) {
+		if (hasWarned) return defaultConfig;
+		hasWarned = true;
 		console.warn("No '.lnvrc' file found in current directory.");
 		console.warn('Using default configuration.');
 		return defaultConfig;
