@@ -8,6 +8,7 @@ import open from 'open';
 
 import type { Interface } from '../interface';
 import { getConfig, makeConfig } from '../util/config';
+import { getDeviceName, getIp } from '../util/os';
 import { setKey } from '../util/storage';
 import { resolveWorkspace } from '../util/workspace';
 import { poll } from './init';
@@ -51,7 +52,14 @@ export default async (int: Interface) => {
 
 	const h: (_: unknown, data: { name: string; ctrl: boolean }) => void = (_, data) => {
 		if (data.name === 'return') {
-			open(`${URL}/api/projects/${config.connection || int.flags.id}/link/${iv}`);
+			const metadata = {
+				sender_device: getDeviceName(),
+				sender_ip: getIp()
+			};
+
+			open(
+				`${URL}/api/projects/${config.connection || int.flags.id}/link/${iv}?metadata=${btoa(JSON.stringify(metadata))}`
+			);
 
 			process.stdin.off('keypress', h);
 		}
