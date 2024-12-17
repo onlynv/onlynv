@@ -6,7 +6,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    test:
+    release:
         if: (github.event_name == 'push' &&
             startsWith(github.event.head_commit.message, 'release/cli')) ||
             github.event_name == 'workflow_dispatch'
