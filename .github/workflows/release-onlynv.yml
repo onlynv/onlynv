@@ -1,0 +1,35 @@
+name: Release onlynv
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    test:
+        if: (github.event_name == 'push' &&
+            startsWith(github.event.head_commit.message, 'release/onlynv')) ||
+            github.event_name == 'workflow_dispatch'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - uses: pnpm/action-setup@v3
+
+            - uses: actions/setup-node@v4
+              with:
+                  registry-url: 'https://registry.npmjs.org'
+                  node-version: 20
+                  cache: 'pnpm'
+
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm build
+            - run: cd packages/onlynv && pnpm publish --provenance --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NPM_CONFIG_PROVENANCE: true
