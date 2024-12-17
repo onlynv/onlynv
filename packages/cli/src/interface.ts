@@ -18,7 +18,7 @@ const commands = [
 	},
 	{
 		name: 'link',
-		shortName: '-l',
+		shortName: 'l',
 		description: "Link your project's environment",
 		flags: [
 			{
