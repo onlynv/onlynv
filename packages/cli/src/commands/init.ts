@@ -78,7 +78,7 @@ export default async (int: Interface) => {
 	});
 
 	if (res instanceof Error) {
-		text: pc.red('Could not establish connection with server');
+		console.log(pc.red('Could not establish connection with server'));
 
 		process.exit(1);
 	}
