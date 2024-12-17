@@ -1,4 +1,4 @@
-# onlynv
+# OnlyNv
 
 OnlyNv is a drop-in replacement for [dotenv](https://npm.js.com/package/dotenv). It aims to be as fast and small as possible, and to be fully compatible with dotenv.
 
