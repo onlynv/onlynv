@@ -81,3 +81,5 @@ interface LinkResponse {
 ```ts
 type SyncStrategy = 'merge' | 'overwrite' | 'pull' | 'pull-merge';
 ```
+
+<img src="./assets/strategies.png" alt="Sync Strategies" width="600"/>
