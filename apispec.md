@@ -26,9 +26,7 @@ Version 1.x.x
 1. The agent compiles the envdata into a JSON object with the following structure:
 ```ts
 {
-    [`${filepath}`]: {
-        [`${key}`]: `${value}`
-    },
+    [`${filepath}`]: `${filecontent}`
 }
 ```
 2. The agent stringifies the object and splits it into chunks of 255 characters.
