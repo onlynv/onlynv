@@ -79,5 +79,5 @@ interface LinkResponse {
 ### SyncStrategy
 
 ```ts
-type SyncStrategy = 'merge' | 'overwrite';
+type SyncStrategy = 'merge' | 'overwrite' | 'pull' | 'pull-merge';
 ```
