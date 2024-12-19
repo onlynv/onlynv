@@ -24,11 +24,13 @@ Version 1.x.x
 ### Sync
 
 1. The agent compiles the envdata into a JSON object with the following structure:
+
 ```ts
 {
     [`${filepath}`]: `${filecontent}`
 }
 ```
+
 2. The agent stringifies the object and splits it into chunks of 255 characters.
 3. The agent encrypts each chunk with the `public` key.
 4. The agent joins the encrypted chunks into a single string with a delimiter of `::`.
@@ -44,11 +46,11 @@ Version 1.x.x
 
 ```ts
 interface InitResponse {
-    id: string;
-    url: string;
-    redirect_url: string;
-    timestamp: number;
-    interval?: number;
+	id: string;
+	url: string;
+	redirect_url: string;
+	timestamp: number;
+	interval?: number;
 }
 ```
 
@@ -56,7 +58,7 @@ interface InitResponse {
 
 ```ts
 interface InitStatusResponse {
-    status: 'done' | 'pending';
+	status: 'done' | 'pending';
 	timestamp: number;
 	project_url?: string;
 	interval?: number;
