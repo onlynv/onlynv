@@ -2,7 +2,6 @@ import pc from '@onlynv/shared/colors';
 import type { InitResponse, InitStatusResponse } from '@onlynv/shared/structs/init';
 import fs from 'fs';
 import open from 'open';
-import { argv } from 'process';
 import readline from 'readline';
 
 import type { Interface } from '../interface';

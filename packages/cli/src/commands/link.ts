@@ -2,7 +2,6 @@ import pc from '@onlynv/shared/colors';
 import type { LinkResponse } from '@onlynv/shared/structs/link';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
-import { argv } from 'node:process';
 import readline from 'node:readline';
 import open from 'open';
 
