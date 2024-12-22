@@ -4,6 +4,7 @@ export type InitResponse = {
 	redirect_url: string;
 	timestamp: number;
 	interval?: number;
+	error?: string;
 };
 
 export type InitStatusResponse = {
@@ -11,10 +12,12 @@ export type InitStatusResponse = {
 	timestamp: number;
 	project_url?: string;
 	interval?: number;
+	error?: string;
 };
 
 export type ProjectResponse = {
 	name: string;
 	id: string;
 	project_url: string | null;
+	error?: string;
 };
