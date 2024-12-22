@@ -85,6 +85,12 @@ export default async (int: Interface) => {
 	try {
 		const init = (await res.json()) as InitResponse;
 
+		if (init?.error) {
+			console.error('Failed to initialize project:', init.error);
+
+			return;
+		}
+
 		console.log(pc.yellow('Initialising Project...'));
 		console.log();
 
@@ -114,7 +120,7 @@ export default async (int: Interface) => {
 			try {
 				const check = (await (await fetch(init.url || URL)).json()) as InitStatusResponse;
 
-				if ('error' in check) {
+				if (check?.error) {
 					console.error('Project error:', check.error);
 
 					cancel();
