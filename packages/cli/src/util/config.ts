@@ -2,7 +2,7 @@ import yaml from 'js-yaml';
 import fs from 'node:fs';
 import path from 'node:path';
 
-type Config = {
+export type Config = {
 	authority: string;
 	connection: string;
 	apispec: number;
@@ -19,7 +19,7 @@ export const readConfig = (config: string): Config => {
 };
 
 export const defaultConfig: Config = {
-	authority: '@onlynv/cli',
+	authority: '@onlynv/platform',
 	connection: '',
 	apispec: 1,
 	exclude: ['**/*.local'],

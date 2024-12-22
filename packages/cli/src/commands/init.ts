@@ -6,15 +6,11 @@ import { argv } from 'process';
 import readline from 'readline';
 
 import type { Interface } from '../interface';
+import { getAuthority } from '../util/authority';
 import { makeConfig } from '../util/config';
 import { getConfirmation } from '../util/input';
 import { getDeviceName, getIp, getOS } from '../util/os';
 import { resolveWorkspace } from '../util/workspace';
-
-const URL =
-	process.env.npm_lifecycle_script || argv.includes('DEV') ?
-		'http://localhost:3000'
-	:	'https://onlynv.dev';
 
 export const poll = async <T>(
 	cb: (
@@ -51,6 +47,10 @@ export const poll = async <T>(
 
 export default async (int: Interface) => {
 	const workspace = resolveWorkspace(process.cwd(), false);
+
+	const URL = getAuthority({
+		authority: '@onlynv/platform'
+	});
 
 	if (workspace && workspace === process.cwd()) {
 		console.error('Cannot initialize new project in workspace root');
@@ -145,7 +145,7 @@ export default async (int: Interface) => {
 			await fs.promises.writeFile(
 				'.lnvrc',
 				makeConfig({
-					authority: '@onlynv/cli',
+					authority: '@onlynv/platform',
 					connection: init.id,
 					apispec: 1
 				})

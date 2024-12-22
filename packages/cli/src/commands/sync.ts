@@ -7,15 +7,11 @@ import path from 'node:path';
 import { argv } from 'node:process';
 
 import type { Interface } from '../interface';
+import { getAuthority } from '../util/authority';
 import { getConfig } from '../util/config';
 import { getKey } from '../util/storage';
 import { resolveWorkspace } from '../util/workspace';
 import glob from './glob';
-
-const URL =
-	process.env.npm_lifecycle_script || argv.includes('DEV') ?
-		'http://localhost:3000'
-	:	'https://onlynv.dev';
 
 export default async (int: Interface) => {
 	const workspace = resolveWorkspace();
@@ -28,6 +24,8 @@ export default async (int: Interface) => {
 	const config = getConfig(workspace);
 	const pubKey = getKey(config.connection, 'default');
 	const bearer = getKey(config.connection, 'bearer');
+
+	const URL = getAuthority(config);
 
 	if (!pubKey) {
 		console.log(

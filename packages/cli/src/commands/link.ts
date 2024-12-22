@@ -7,20 +7,18 @@ import readline from 'node:readline';
 import open from 'open';
 
 import type { Interface } from '../interface';
+import { getAuthority } from '../util/authority';
 import { getConfig, makeConfig } from '../util/config';
 import { getDeviceName, getIp } from '../util/os';
 import { setKey } from '../util/storage';
 import { resolveWorkspace } from '../util/workspace';
 import { poll } from './init';
 
-const URL =
-	process.env.npm_lifecycle_script || argv.includes('DEV') ?
-		'http://localhost:3000'
-	:	'https://onlynv.dev';
-
 export default async (int: Interface) => {
 	const workspace = resolveWorkspace(process.cwd(), false);
 	const config = getConfig(workspace);
+
+	const URL = getAuthority(config);
 
 	if (!(workspace && config.connection)) {
 		if (!int.flags.id) {
@@ -32,7 +30,7 @@ export default async (int: Interface) => {
 		await fs.promises.writeFile(
 			'.lnvrc',
 			makeConfig({
-				authority: '@onlynv/cli',
+				authority: config.authority || '@onlynv/platform',
 				connection: int.flags.id as string,
 				apispec: 1
 			})
