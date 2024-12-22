@@ -4,7 +4,6 @@ import { publicDecrypt, publicEncrypt } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
 import path from 'node:path';
-import { argv } from 'node:process';
 
 import type { Interface } from '../interface';
 import { getAuthority } from '../util/authority';
