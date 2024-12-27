@@ -23,7 +23,6 @@ const commands = [
 		flags: [
 			{
 				name: 'id',
-				shortName: 'i',
 				description: 'The id of the project to link',
 				allowSolo: true,
 				required: false,
@@ -39,7 +38,6 @@ const commands = [
 		flags: [
 			{
 				name: 'name',
-				shortName: 'n',
 				description: 'Name of the project',
 				allowSolo: true,
 				required: false,
@@ -95,7 +93,6 @@ const commands = [
 				flags: [
 					{
 						name: 'key',
-						shortName: 'k',
 						description: 'The key itself',
 						required: true,
 						allowSolo: true,
@@ -115,6 +112,20 @@ const commands = [
 			{
 				name: 'remove',
 				description: 'Remove a key',
+				flags: [
+					{
+						name: 'id',
+						description: 'id or name of the key',
+						required: true,
+						allowSolo: true,
+						expectsValue: true
+					}
+				],
+				subcommands: []
+			},
+			{
+				name: 'get',
+				description: 'Get a key',
 				flags: [
 					{
 						name: 'id',
@@ -199,7 +210,7 @@ export const createInterface = (): Interface => {
 				for (const f of c.flags) {
 					console.log(
 						`    ${pc.cyan(f.name)} ${
-							'shortName' in f ? `(${pc.yellow(f.shortName)})` : ''
+							'shortName' in f ? `(${pc.yellow(f.shortName as string)})` : ''
 						}`.padEnd(40) +
 							f.description +
 							(f.required ? ' (required)' : '')

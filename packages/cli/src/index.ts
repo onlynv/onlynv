@@ -1,4 +1,5 @@
 import pc from '@onlynv/shared/colors';
+import path from 'path';
 
 import pkj from '../package.json';
 import glob from './commands/glob';
@@ -7,7 +8,7 @@ import link from './commands/link';
 import sync from './commands/sync';
 import { createInterface } from './interface';
 import { getConfig } from './util/config';
-import { getAllKeys, setKey } from './util/storage';
+import { getAllKeys, getKey, setKey } from './util/storage';
 import { resolveWorkspace } from './util/workspace';
 
 const int = createInterface();
@@ -52,8 +53,29 @@ switch (int.command?.name) {
 				break;
 			case 'remove':
 				break;
+			case 'get':
+				if (typeof int.flags.id !== 'string') {
+					console.log(pc.red('Name is required'));
+					process.exit(1);
+				}
+
+				const key = getKey(config.connection, int.flags.id || 'default');
+
+				if (key === null) {
+					console.log(
+						pc.red(
+							`Key ${int.flags.id || 'default'} not found for ${config.connection}`
+						)
+					);
+					process.exit(1);
+				}
+
+				console.log(key);
+				break;
 			case 'list':
 			default:
+				const workspace = resolveWorkspace(process.cwd(), false);
+
 				const keys = getAllKeys(config.connection);
 
 				if (Object.keys(keys).length === 0) {
@@ -61,10 +83,12 @@ switch (int.command?.name) {
 					process.exit(1);
 				}
 
-				console.log('Keys:');
+				console.log(
+					pc.yellow(`Keys for ${path.basename(workspace)} (${config.connection})`)
+				);
 				console.log();
 				for (const [key, val] of Object.entries(keys)) {
-					console.log(`- ${key}: ${val}`);
+					console.log(`\t${key}: ${pc.red(`<${val.length} bytes>`)}`);
 				}
 				break;
 		}
