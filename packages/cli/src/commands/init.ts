@@ -95,7 +95,7 @@ export default async (int: Interface) => {
 		console.log();
 
 		console.log('Press ENTER to open in browser:');
-		console.log(pc.green(init.redirect_url));
+		console.log(pc.gray(init.redirect_url));
 
 		readline.emitKeypressEvents(process.stdin);
 		process.stdin.setRawMode(true);
