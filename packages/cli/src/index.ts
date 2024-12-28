@@ -52,6 +52,14 @@ switch (int.command?.name) {
 				setKey(config.connection, int.flags.name || 'default', int.flags.key);
 				break;
 			case 'remove':
+				if (typeof int.flags.id !== 'string') {
+					console.log(pc.red('Name is required'));
+					process.exit(1);
+				}
+
+				setKey(config.connection, int.flags.id, undefined);
+
+				console.log(pc.green(`Key ${int.flags.id} removed`));
 				break;
 			case 'get':
 				if (typeof int.flags.id !== 'string') {
