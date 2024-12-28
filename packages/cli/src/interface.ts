@@ -193,20 +193,20 @@ export const createInterface = (): Interface => {
 			console.log('Commands:');
 
 			for (const c of commands) {
-				const shortName = c.shortName || '';
-
-				const start = `  ${pc.green(c.name)} (${pc.yellow(shortName)})`.padEnd(36);
-				const end = `${c.description} ${c.flags.some((f) => f.required) ? '(required)' : ''}`;
+				const start = `  ${pc.green(
+					c.name + ('shortName' in c ? `, ${c.shortName}` : '')
+				)}`.padEnd(36);
+				const end = `${c.description} ${c.flags.some((f) => f.required) ? pc.red('(required)') : ''}`;
 
 				console.log(start + end);
 
 				for (const f of c.flags) {
 					console.log(
-						`    ${pc.cyan(f.name)} ${
-							'shortName' in f ? `(${pc.yellow(f.shortName as string)})` : ''
-						}`.padEnd(40) +
+						`    ${pc.cyan(
+							'--' + f.name + ('shortName' in f ? `, ${f.shortName as string}` : '')
+						)}`.padEnd(40) +
 							f.description +
-							(f.required ? ' (required)' : '')
+							(f.required ? pc.red(' (required)') : '')
 					);
 				}
 
@@ -215,11 +215,11 @@ export const createInterface = (): Interface => {
 
 					for (const f of sc.flags) {
 						console.log(
-							`      ${pc.cyan(f.name)} ${
-								'shortName' in f ? `(${pc.yellow(f.shortName)})` : ''
-							}`.padEnd(42) +
+							`      ${pc.cyan(
+								'--' + f.name + ('shortName' in f ? `, -${f.shortName}` : '')
+							)}`.padEnd(42) +
 								f.description +
-								(f.required ? ' (required)' : '')
+								(f.required ? pc.red(' (required)') : '')
 						);
 					}
 				}
