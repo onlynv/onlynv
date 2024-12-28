@@ -42,13 +42,6 @@ const commands = [
 				allowSolo: true,
 				required: false,
 				expectsValue: true
-			},
-			{
-				name: 'dry-run',
-				description: 'Dry run the command',
-				allowSolo: false,
-				expectsValue: false,
-				required: false
 			}
 		],
 		subcommands: []
@@ -243,7 +236,7 @@ const getFlags = (args: string[]): Record<string, string | boolean | undefined> 
 	const command =
 		isSubcommand ?
 			commands.flatMap((c) => c.subcommands).find((sc) => sc.name === args[1])
-		:	commands.find((c) => c.name === args[0]);
+		:	commands.find((c) => c.name === args[0] || c.shortName === args[0]);
 
 	if (!command) return flags;
 
@@ -257,6 +250,7 @@ const getFlags = (args: string[]): Record<string, string | boolean | undefined> 
 		const flag = flagList.find(
 			(f) =>
 				f.name === arg ||
+				'--' + f.name === arg ||
 				('shortName' in f && (f.shortName === arg || '-' + f.shortName === arg))
 		);
 
