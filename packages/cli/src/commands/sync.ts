@@ -80,6 +80,20 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 
 	console.log();
 
+	if (int.flags['dry-run']) {
+		console.log(pc.yellow('Dry run:'), 'Would have sent data to server:');
+
+		console.log();
+
+		console.log(pc.green('Strategy:') + ' ' + (int.flags.strategy || 'merge'));
+
+		console.log(pc.green('Encrypted data:'));
+
+		console.log(encrypted.join('::'));
+
+		return;
+	}
+
 	const dataSpinner = createSpinner(pc.yellow('Sending data to server...'));
 
 	dataSpinner.start();
