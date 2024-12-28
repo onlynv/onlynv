@@ -57,12 +57,6 @@ export default async (int: Interface) => {
 		return;
 	}
 
-	if (int.flags['dry-run']) {
-		console.log(pc.yellow('Dry run:'), 'Would have initialised a project');
-
-		return;
-	}
-
 	const res = await fetch(URL + '/api/init', {
 		body: JSON.stringify({
 			sender: '@onlynv/cli',
