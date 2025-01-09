@@ -15,7 +15,7 @@ Version 1.x.x
 
 ### Link
 
-1. The agent redirects the user to `GET:/api/projects/:project_id/link/:iv`, where `iv` is the initialisation vector.
+1. The agent redirects the user to `GET:/projects/:project_id/link/:iv`, where `iv` is the initialisation vector.
 2. The agent begins polling `POST:/api/projects/:project_id/link/:iv` for the project status.
 3. The authority responds with an `@LinkResponse` object.
 4. Upon success, the response's `success` is `true`, and the `bearer` and `public` keys are provided.
