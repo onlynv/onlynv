@@ -42,7 +42,7 @@ export default async (int: Interface) => {
 	const iv = crypto.randomBytes(16).toString('hex');
 
 	console.log('Press ENTER to open in browser:');
-	console.log(pc.gray(`${URL}/api/projects/${config.connection || int.flags.id}/link/${iv}`));
+	console.log(pc.gray(`${URL}/projects/${config.connection || int.flags.id}/link/${iv}`));
 
 	readline.emitKeypressEvents(process.stdin);
 	process.stdin.setRawMode(true);
@@ -55,7 +55,7 @@ export default async (int: Interface) => {
 			};
 
 			open(
-				`${URL}/api/projects/${config.connection || int.flags.id}/link/${iv}?metadata=${btoa(JSON.stringify(metadata))}`
+				`${URL}/projects/${config.connection || int.flags.id}/link/${iv}?metadata=${btoa(JSON.stringify(metadata))}`
 			);
 
 			process.stdin.off('keypress', h);
