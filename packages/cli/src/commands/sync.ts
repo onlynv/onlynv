@@ -128,6 +128,14 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		process.exit(1);
 	}
 
+	if (res.status === 406) {
+		dataSpinner.error({
+			text: pc.red('Outdated Access Token!\nPlease run `nv link` to re-authenticate')
+		});
+
+		process.exit(1);
+	}
+
 	if (!res.ok) {
 		dataSpinner.error({ text: pc.red('Failed to sync project (ERR_CODE_' + res.status + ')') });
 		process.exit(1);
