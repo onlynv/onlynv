@@ -1,6 +1,6 @@
 import pc from '@onlynv/shared/colors';
 import { createSpinner } from 'nanospinner';
-import { publicDecrypt, publicEncrypt } from 'node:crypto';
+import { privateDecrypt, publicDecrypt, publicEncrypt } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
 import path from 'node:path';
@@ -23,6 +23,10 @@ export default async (int: Interface) => {
 	const config = getConfig(workspace);
 	const pubKey = getKey(config.connection, 'default');
 	const bearer = getKey(config.connection, 'bearer');
+	const local = {
+		public: getKey(config.connection || (int.flags.id as string), 'public'),
+		private: getKey(config.connection || (int.flags.id as string), 'private')
+	};
 
 	const URL = getAuthority(config);
 
@@ -42,6 +46,14 @@ Did you forget to add one with 'nv key add ***************'?`
 Did you forget to add one with 'nv key add *************** -n bearer'?`
 		);
 		process.exit(1);
+	}
+
+	if (!local.public || !local.private) {
+		console.log(
+			`${pc.red(`No local keys available for ${basename(workspace)}`)}
+
+Please re-authenticate with 'nv link'`
+		);
 	}
 
 	console.log(pc.yellow(`Syncing ${basename(workspace)} (${config.connection})`));
@@ -102,7 +114,7 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 		URL +
 			`/api/projects/${config.connection}/sync?strategy=${encodeURIComponent(int.flags.strategy || 'merge')}`,
 		{
-			body: encrypted.join('::'),
+			body: encrypted.join('::') + '\n\r\n' + local.public,
 			headers: {
 				Authorization: `Bearer ${bearer}`
 			},
@@ -113,6 +125,8 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	});
 
 	if (res instanceof Error) {
+		console.log(res);
+
 		dataSpinner.error({
 			text: pc.red('Could not establish connection with server')
 		});
@@ -173,8 +187,8 @@ Did you forget to add one with 'nv key add *************** -n bearer'?`
 	let json = '';
 
 	for (const chunk of newChunks) {
-		const decrypted = publicDecrypt(
-			pubKey,
+		const decrypted = privateDecrypt(
+			local.private,
 			new Uint8Array(Buffer.from(chunk, 'base64'))
 		).toString('utf-8');
 		json += decrypted;
