@@ -1,6 +1,6 @@
 import pc from '@onlynv/shared/colors';
 import type { LinkResponse } from '@onlynv/shared/structs/link';
-import crypto from 'node:crypto';
+import crypto, { generateKeyPairSync } from 'node:crypto';
 import fs from 'node:fs';
 import readline from 'node:readline';
 import open from 'open';
@@ -9,7 +9,7 @@ import type { Interface } from '../interface';
 import { getAuthority } from '../util/authority';
 import { getConfig, makeConfig } from '../util/config';
 import { getDeviceName, getIp } from '../util/os';
-import { setKey } from '../util/storage';
+import { getKey, setKey } from '../util/storage';
 import { resolveWorkspace } from '../util/workspace';
 import { poll } from './init';
 
@@ -113,6 +113,31 @@ export default async (int: Interface) => {
 	console.log(pc.green('Project linked!'));
 
 	console.log();
+
+	const hasLocalKeys =
+		getKey(config.connection || (int.flags.id as string), 'public') &&
+		getKey(config.connection || (int.flags.id as string), 'private');
+
+	if (!hasLocalKeys) {
+		const keys = generateKeyPairSync('rsa', {
+			modulusLength: 4096,
+			publicKeyEncoding: {
+				type: 'spki',
+				format: 'pem'
+			},
+			privateKeyEncoding: {
+				type: 'pkcs8',
+				format: 'pem'
+			}
+		});
+
+		setKey(config.connection || (int.flags.id as string), 'public', keys.publicKey);
+		setKey(config.connection || (int.flags.id as string), 'private', keys.privateKey);
+
+		console.log(pc.green('Generated RSA key pair'));
+
+		console.log();
+	}
 
 	setKey(config.connection || (int.flags.id as string), 'default', res.public);
 	setKey(config.connection || (int.flags.id as string), 'bearer', res.bearer);
