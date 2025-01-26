@@ -8,11 +8,17 @@ const commands = [
 		flags: [],
 		subcommands: []
 	},
-
 	{
 		name: 'help',
 		shortName: '-h',
 		description: 'Show this help message',
+		flags: [],
+		subcommands: []
+	},
+	{
+		name: 'ping',
+		shortName: 'p',
+		description: 'Ping the platform',
 		flags: [],
 		subcommands: []
 	},

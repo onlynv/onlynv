@@ -5,6 +5,7 @@ import pkj from '../package.json';
 import glob from './commands/glob';
 import init from './commands/init';
 import link from './commands/link';
+import ping from './commands/ping';
 import sync from './commands/sync';
 import { createInterface } from './interface';
 import { getConfig } from './util/config';
@@ -23,6 +24,9 @@ if (int.isDefault) {
 switch (int.command?.name) {
 	case 'version':
 		console.log(`${pc.yellow(pkj.name)} ${pc.green('v' + pkj.version)}`);
+		break;
+	case 'ping':
+		await ping(int);
 		break;
 	case 'init':
 		await init(int);
