@@ -48,7 +48,7 @@ export default async (int: Interface) => {
 	const workspace = resolveWorkspace(process.cwd(), false);
 
 	const URL = getAuthority({
-		authority: '@onlynv/platform'
+		authority: (int.flags.authority as string) || '@onlynv/platform'
 	});
 
 	if (workspace && workspace === process.cwd()) {
@@ -62,8 +62,7 @@ export default async (int: Interface) => {
 			sender: '@onlynv/cli',
 			sender_ip: getIp(),
 			sender_device: getDeviceName(),
-			sender_os: getOS(),
-			name: int.flags.name
+			sender_os: getOS()
 		}),
 		method: 'POST'
 	}).catch((e) => {

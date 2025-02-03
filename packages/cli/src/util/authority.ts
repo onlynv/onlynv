@@ -14,5 +14,9 @@ export const getAuthority = (config: Partial<Config>) => {
 		return URL;
 	}
 
+	if (typeof config.authority !== 'string') {
+		return URL;
+	}
+
 	return config.authority || URL;
 };

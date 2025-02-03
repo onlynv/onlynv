@@ -43,8 +43,8 @@ const commands = [
 		description: 'Initialise a new project',
 		flags: [
 			{
-				name: 'name',
-				description: 'Name of the project',
+				name: 'authority',
+				description: 'The authority URL where you would like to init a project.',
 				allowSolo: true,
 				required: false,
 				expectsValue: true
