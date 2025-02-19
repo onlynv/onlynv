@@ -17,7 +17,7 @@ It's as simple as three commands:
 
 1. Run `nv init` to create a new project on [onlynv.dev](https://onlynv.dev)[^1]
 2. Run `nv link` to authenticate your device with the authority.
-3. Run `nv sync` to sync your variables!  
+3. Run `nv sync` to sync your variables!
 
 [^1]: You can specify a third-party authority by providing a second argument: `nv init https://my-authority.com`
 
@@ -25,11 +25,11 @@ It's as simple as three commands:
 
 In addition to those aforementioned, the CLi also offers:
 
-- `nv ping` - Check the connection status of your authority.
-- `nv glob` - View all env files known to the CLI
-- `nv key` - For granular management of access tokens.
+-   `nv ping` - Check the connection status of your authority.
+-   `nv glob` - View all env files known to the CLI
+-   `nv key` - For granular management of access tokens.
 
 <br />
 
-- `nv version` or `nv -v`
-- `nv help` or `nv -h`
+-   `nv version` or `nv -v`
+-   `nv help` or `nv -h`

@@ -10,8 +10,10 @@
 <br>
 
 ## About
+
 This monorepo contains:
-- The OnlyNv CLI - [@onlynv/cli](./packages/cli)
-- The `onlynv` package - [onlynv](./packages/onlynv)
-- Shared types and interfaces - [@onlynv/shared](./packages/shared)
-- Shared tsconfig - [@onlynv/tsconfig](./packages/tsconfig)
+
+-   The OnlyNv CLI - [@onlynv/cli](./packages/cli)
+-   The `onlynv` package - [onlynv](./packages/onlynv)
+-   Shared types and interfaces - [@onlynv/shared](./packages/shared)
+-   Shared tsconfig - [@onlynv/tsconfig](./packages/tsconfig)

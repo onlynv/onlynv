@@ -3,14 +3,17 @@
 	"scripts": {
 		"build": "turbo build",
 		"dev": "turbo dev",
-		"lint": "turbo lint",
+		"lint": "eslint . --ignore-pattern '**/dist'",
 		"test": "turbo test",
 		"format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
 		"nv": "node ./packages/cli/dist/bin.js"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "^0.15.4",
+		"@eslint/eslintrc": "^3.2.0",
+		"@eslint/js": "^9.20.0",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
+		"eslint": "^9.20.1",
 		"prettier": "^3.2.5",
 		"turbo": "^2.0.14"
 	},
