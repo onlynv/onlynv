@@ -269,8 +269,6 @@ const getFlags = (args: string[]): Record<string, string | boolean | undefined> 
 				flags[solo.name] = arg;
 				continue;
 			}
-
-			console.log(`Unknown flag: ${arg}`);
 			continue;
 		}
 
