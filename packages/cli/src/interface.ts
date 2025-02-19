@@ -72,6 +72,13 @@ const commands = [
 				required: false
 			},
 			{
+				name: 'skip-ci',
+				description: 'Skip CI sync',
+				allowSolo: true,
+				expectsValue: false,
+				required: false
+			},
+			{
 				name: 'strategy',
 				description: 'The strategy to use for syncing',
 				allowSolo: true,

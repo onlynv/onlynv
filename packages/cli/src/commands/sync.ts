@@ -103,6 +103,13 @@ Please re-authenticate with 'nv link'`
 
 		console.log(encrypted.join('::'));
 
+		console.log(
+			pc.green('Target route:') +
+				' ' +
+				URL +
+				`/api/projects/${config.connection}/sync?strategy=${encodeURIComponent(int.flags.strategy || 'merge')}&skip_ci=${int.flags['skip-ci'] ? 'true' : 'false'}`
+		);
+
 		return;
 	}
 
@@ -112,7 +119,7 @@ Please re-authenticate with 'nv link'`
 
 	const res = await fetch(
 		URL +
-			`/api/projects/${config.connection}/sync?strategy=${encodeURIComponent(int.flags.strategy || 'merge')}`,
+			`/api/projects/${config.connection}/sync?strategy=${encodeURIComponent(int.flags.strategy || 'merge')}&skip_ci=${int.flags['skip-ci'] ? 'true' : 'false'}`,
 		{
 			body: encrypted.join('::') + '\n\r\n' + local.public,
 			headers: {
@@ -125,8 +132,6 @@ Please re-authenticate with 'nv link'`
 	});
 
 	if (res instanceof Error) {
-		console.log(res);
-
 		dataSpinner.error({
 			text: pc.red('Could not establish connection with server')
 		});
