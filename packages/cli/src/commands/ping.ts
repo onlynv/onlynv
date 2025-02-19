@@ -24,8 +24,12 @@ export default async (int: Interface) => {
 
 	let online = false;
 
+	const now = performance.now();
+
 	try {
 		const res = await fetch(authority + '/api/ping');
+
+		const time = performance.now() - now;
 
 		if (res instanceof Error) {
 			spinner.error({
@@ -35,7 +39,7 @@ export default async (int: Interface) => {
 
 		if (res.ok) {
 			spinner.success({
-				text: pc.green('Pong!')
+				text: pc.green('Pong!' + (time > 0 ? ` (${time.toFixed(2)}ms)` : ''))
 			});
 
 			online = true;
