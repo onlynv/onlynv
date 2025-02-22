@@ -10,7 +10,6 @@ export default defineConfig({
 			fileName: (_, name) => `${name}.js`,
 			formats: ['es', 'cjs']
 		},
-		minify: false,
 		rollupOptions: {
 			external: builtinModules.concat(builtinModules.map((m) => `node:${m}`))
 		}
