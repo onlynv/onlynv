@@ -1,6 +1,6 @@
 import pc from '@onlynv/shared/colors';
 import { createSpinner } from 'nanospinner';
-import { privateDecrypt, publicDecrypt, publicEncrypt } from 'node:crypto';
+import { privateDecrypt, publicEncrypt } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
 import path from 'node:path';
