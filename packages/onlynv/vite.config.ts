@@ -5,11 +5,12 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
 	build: {
 		lib: {
-			entry: 'src/index.ts',
+			entry: { index: 'src/index.ts', config: 'src/config.ts' },
 			name: 'onlynv',
-			fileName: 'index',
+			fileName: (_, name) => `${name}.js`,
 			formats: ['es', 'cjs']
 		},
+		minify: false,
 		rollupOptions: {
 			external: builtinModules.concat(builtinModules.map((m) => `node:${m}`))
 		}

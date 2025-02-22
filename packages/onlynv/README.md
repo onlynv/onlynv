@@ -25,3 +25,9 @@ config(); // ✨
 config({ path: ['../.env', '.env.local'] });
 config({ encoding: 'utf8' });
 ```
+
+OR
+
+```javascript
+import 'onlynv/config'; // ✨
+```
