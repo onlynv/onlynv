@@ -96,11 +96,10 @@ export default async (int: Interface) => {
 		const h: (_: unknown, data: { name: string; ctrl: boolean }) => void = (_, data) => {
 			if (data.name === 'return') {
 				open(init.redirect_url);
-
-				process.stdin.off('keypress', h);
 			}
 
 			if (data.name === 'escape' || (data.ctrl && data.name === 'c')) {
+				process.stdin.off('keypress', h);
 				process.exit();
 			}
 		};
@@ -114,12 +113,14 @@ export default async (int: Interface) => {
 				const check = (await (await fetch(init.url || URL)).json()) as InitStatusResponse;
 
 				if (check?.error) {
+					process.stdin.off('keypress', h);
 					console.error('Project error:', check.error);
 
 					cancel();
 				}
 
 				if (check.status === 'done') {
+					process.stdin.off('keypress', h);
 					resolve(check);
 				}
 

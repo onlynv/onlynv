@@ -57,11 +57,11 @@ export default async (int: Interface) => {
 			open(
 				`${URL}/projects/${config.connection || int.flags.id}/link/${iv}?metadata=${btoa(JSON.stringify(metadata))}`
 			);
-
-			process.stdin.off('keypress', h);
 		}
 
 		if (data.name === 'escape' || (data.ctrl && data.name === 'c')) {
+			process.stdin.removeListener('keypress', h);
+
 			process.exit();
 		}
 	};
@@ -88,6 +88,7 @@ export default async (int: Interface) => {
 		}
 
 		if (res.status === 200) {
+			process.stdin.removeListener('keypress', h);
 			const json = (await res.json()) as LinkResponse;
 
 			if ('success' in json) {
