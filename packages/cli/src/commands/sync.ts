@@ -107,7 +107,7 @@ Please re-authenticate with 'nv link'`
 			pc.green('Target route:') +
 				' ' +
 				URL +
-				`/api/projects/${config.connection}/sync?strategy=${encodeURIComponent(int.flags.strategy || 'merge')}&skip_ci=${int.flags['skip-ci'] ? 'true' : 'false'}`
+				`/api/projects/${config.connection}/sync?strategy=${encodeURIComponent(int.flags.strategy || 'merge')}&skip_ci=${int.flags['skip-ci'] === true ? 'true' : 'false'}`
 		);
 
 		return;
@@ -119,7 +119,7 @@ Please re-authenticate with 'nv link'`
 
 	const res = await fetch(
 		URL +
-			`/api/projects/${config.connection}/sync?strategy=${encodeURIComponent(int.flags.strategy || 'merge')}&skip_ci=${int.flags['skip-ci'] ? 'true' : 'false'}`,
+			`/api/projects/${config.connection}/sync?strategy=${encodeURIComponent(int.flags.strategy || 'merge')}&skip_ci=${int.flags['skip-ci'] === true ? 'true' : 'false'}`,
 		{
 			body: encrypted.join('::') + '\n\r\n' + local.public,
 			headers: {
