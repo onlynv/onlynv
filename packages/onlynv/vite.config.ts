@@ -1,13 +1,12 @@
 import { builtinModules } from 'module';
 import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
 
 export default defineConfig({
 	build: {
 		lib: {
 			entry: { index: 'src/index.ts', config: 'src/config.ts' },
 			name: 'onlynv',
-			fileName: (_, name) => `${name}.js`,
+			fileName: (format, name) => `${name}.${format === 'es' ? 'js' : 'cjs'}`,
 			formats: ['es', 'cjs']
 		},
 		rollupOptions: {
