@@ -34,7 +34,7 @@ export default async (int: Interface) => {
 		console.log(
 			`${pc.red(`No public keys available for ${basename(workspace)}`)}
 
-Did you forget to add one with 'nv key add ***************'?`
+Did you forget to add one with 'nv stow add ***************'?`
 		);
 		process.exit(1);
 	}
@@ -43,7 +43,7 @@ Did you forget to add one with 'nv key add ***************'?`
 		console.log(
 			`${pc.red(`No bearer token available for ${basename(workspace)}`)}
 
-Did you forget to add one with 'nv key add *************** -n bearer'?`
+Did you forget to add one with 'nv stow add *************** -n bearer'?`
 		);
 		process.exit(1);
 	}

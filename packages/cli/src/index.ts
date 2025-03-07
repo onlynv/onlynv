@@ -40,7 +40,7 @@ switch (int.command?.name) {
 	case 'sync':
 		await sync(int);
 		break;
-	case 'key': {
+	case 'stow': {
 		switch (int.subcommand?.name) {
 			case 'add':
 				if (typeof int.flags.key !== 'string') {

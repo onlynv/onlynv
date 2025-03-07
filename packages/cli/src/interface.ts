@@ -89,9 +89,9 @@ const commands = [
 		subcommands: []
 	},
 	{
-		name: 'key',
+		name: 'stow',
 		shortName: 'k',
-		description: 'Manage your bearer keys',
+		description: 'Manage your authentication methods',
 		subcommands: [
 			{
 				name: 'add',

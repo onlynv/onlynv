@@ -27,7 +27,7 @@ In addition to those aforementioned, the CLi also offers:
 
 -   `nv ping` - Check the connection status of your authority.
 -   `nv glob` - View all env files known to the CLI
--   `nv key` - For granular management of access tokens.
+-   `nv stow` - For granular management of access tokens.
 
 <br />
 
