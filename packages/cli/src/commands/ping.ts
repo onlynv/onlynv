@@ -4,6 +4,7 @@ import { createSpinner } from 'nanospinner';
 import type { Interface } from '../interface';
 import { getAuthority } from '../util/authority';
 import { getConfig } from '../util/config';
+import { getKey } from '../util/storage';
 import { resolveWorkspace } from '../util/workspace';
 
 export default async (int: Interface) => {
@@ -26,8 +27,14 @@ export default async (int: Interface) => {
 
 	const now = performance.now();
 
+	const bearer = getKey(config.connection, 'bearer');
+
 	try {
-		const res = await fetch(authority + '/api/ping');
+		const res = await fetch(authority + '/api/ping', {
+			headers: {
+				Authorization: `Bearer ${bearer}`
+			}
+		});
 
 		const time = performance.now() - now;
 
@@ -41,6 +48,13 @@ export default async (int: Interface) => {
 			spinner.success({
 				text: pc.green('Pong!' + (time > 0 ? ` (${time.toFixed(2)}ms)` : ''))
 			});
+
+			const name = (await res.text()).split(' ')[1];
+
+			if (name) {
+				console.log();
+				console.log(pc.yellow(`Successfully authenticated as ${name}`));
+			}
 
 			online = true;
 		} else {
