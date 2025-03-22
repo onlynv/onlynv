@@ -226,12 +226,15 @@ Please re-authenticate with 'nv link'`
 	process.exit(0);
 };
 
+const envSort = (a: [string, { value: string }], b: [string, { value: string }]) =>
+	a[0].localeCompare(b[0]);
+
 const assembleEnv = (
 	content: Record<string, { value: string; local: string; production: string }>
 ) => {
 	let env = '';
 
-	for (const [key, { value }] of Object.entries(content)) {
+	for (const [key, { value }] of Object.entries(content).sort(envSort)) {
 		if (/[\s]/.test(value)) {
 			env += `${key}="${value}"\n`;
 		} else {
