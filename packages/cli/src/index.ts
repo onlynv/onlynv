@@ -7,6 +7,7 @@ import init from './commands/init';
 import link from './commands/link';
 import ping from './commands/ping';
 import sync from './commands/sync';
+import dotype from './commands/type';
 import { createInterface } from './interface';
 import { getConfig } from './util/config';
 import { getAllKeys, getKey, setKey } from './util/storage';
@@ -39,6 +40,9 @@ switch (int.command?.name) {
 		break;
 	case 'sync':
 		await sync(int);
+		break;
+	case 'type':
+		await dotype(int);
 		break;
 	case 'stow': {
 		switch (int.subcommand?.name) {

@@ -89,6 +89,28 @@ const commands = [
 		subcommands: []
 	},
 	{
+		name: 'type',
+		shortName: 't',
+		description: 'Generate types for your environment',
+		flags: [
+			{
+				name: 'target',
+				description: 'The target language for the types',
+				allowSolo: true,
+				expectsValue: true,
+				required: false
+			},
+			{
+				name: 'dry-run',
+				description: 'Dry run the command',
+				allowSolo: false,
+				expectsValue: false,
+				required: false
+			}
+		],
+		subcommands: []
+	},
+	{
 		name: 'stow',
 		shortName: 'k',
 		description: 'Manage your authentication methods',
