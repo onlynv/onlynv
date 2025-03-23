@@ -12,12 +12,25 @@ const strip = (data: string) => {
 	for (const line of data.split('\n')) {
 		let strippedLine = '';
 
-		// skip nv dependent lines
-		if (line.startsWith('production:') || line.startsWith('local:')) {
+		const [before, ...comment] = line.split('#');
+
+		if (before === '' && comment.length === 0) {
+			stripped += '\n';
 			continue;
 		}
 
-		const [beforeeq, ...rest] = line.split('=');
+		if (!before) {
+			stripped += '#' + comment + '\n';
+
+			continue;
+		}
+
+		// skip nv dependent lines
+		if (before.startsWith('production:') || before.startsWith('local:')) {
+			continue;
+		}
+
+		const [beforeeq, ...rest] = before.split('=');
 
 		if (!insideQuotes) {
 			strippedLine = beforeeq + (rest.length ? '=' : '');
