@@ -72,15 +72,19 @@ export default async (int: Interface) => {
 		}
 	}
 
+	let outfile;
+	let content;
+
 	switch (int.flags.target || 'ts') {
 		case 'ts': {
-			const ts = generateTs(assembled);
-			writeFileSync(path.join(workspace, 'nv.d.ts'), ts);
+			content = generateTs(assembled);
+
+			outfile = path.join(workspace, 'nv.d.ts');
 			break;
 		}
 		case 'bun': {
-			const bun = generateBun(assembled);
-			writeFileSync(path.join(workspace, 'nv.d.ts'), bun);
+			content = generateBun(assembled);
+			outfile = path.join(workspace, 'nv.d.ts');
 			break;
 		}
 		default: {
@@ -88,6 +92,16 @@ export default async (int: Interface) => {
 			process.exit(1);
 		}
 	}
+
+	if (int.flags['dry-run']) {
+		console.log(pc.yellow('Dry run:'), 'Would have written the following to', outfile);
+		console.log();
+		console.log(content);
+
+		return;
+	}
+
+	writeFileSync(outfile, content);
 
 	console.log(pc.green('Types generated successfully!'));
 };
