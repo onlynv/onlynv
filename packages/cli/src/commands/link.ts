@@ -101,7 +101,11 @@ export default async (int: Interface) => {
 		} else {
 			await delay(1000);
 		}
-	}, 2000);
+	}, 2000).catch(() => {
+		console.log(pc.red('Failed to link project (TIMEOUT)'));
+
+		process.exit(1);
+	});
 
 	console.log();
 

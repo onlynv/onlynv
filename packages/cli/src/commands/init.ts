@@ -6,6 +6,7 @@ import readline from 'readline';
 
 import type { Interface } from '../interface';
 import { getAuthority } from '../util/authority';
+import { backoffLevel } from '../util/backoff';
 import { makeConfig } from '../util/config';
 import { getConfirmation } from '../util/input';
 import { getDeviceName, getIp, getOS } from '../util/os';
@@ -17,7 +18,8 @@ export const poll = async <T>(
 		cancel: () => void,
 		resolve: (t: T) => void
 	) => Promise<void>,
-	ms: number
+	ms: number,
+	cancelAfter = 60 * 1000
 ) => {
 	let cancel = false;
 	let toResolve: T | undefined;
@@ -26,9 +28,20 @@ export const poll = async <T>(
 		cancel = true;
 	};
 
+	let iter = 0;
+
 	while (!cancel) {
 		await cb(
-			(nms?: number) => new Promise((resolve) => setTimeout(resolve, nms ?? ms)),
+			(nms?: number) => {
+				const delay = backoffLevel(iter++, nms ?? ms, cancelAfter);
+
+				if (delay === null) {
+					cancelCb();
+					throw 'cancelled';
+				}
+
+				return new Promise((resolve) => setTimeout(resolve, delay));
+			},
 			cancelCb,
 			(t) => {
 				toResolve = t;
@@ -108,29 +121,39 @@ export default async (int: Interface) => {
 
 		console.log();
 
-		const created = await poll<InitStatusResponse>(async (delay, cancel, resolve) => {
-			try {
-				const check = (await (await fetch(init.url || URL)).json()) as InitStatusResponse;
+		const created = await poll<InitStatusResponse>(
+			async (delay, cancel, resolve) => {
+				try {
+					const check = (await (
+						await fetch(init.url || URL)
+					).json()) as InitStatusResponse;
 
-				if (check?.error) {
-					process.stdin.off('keypress', h);
-					console.error('Project error:', check.error);
+					if (check?.error) {
+						process.stdin.off('keypress', h);
+						console.error('Project error:', check.error);
+
+						cancel();
+					}
+
+					if (check.status === 'done') {
+						process.stdin.off('keypress', h);
+						resolve(check);
+					}
+
+					return delay(check.interval ?? 5000);
+				} catch (e) {
+					console.error('Failed to check project status:', Error(e as string).message);
 
 					cancel();
 				}
+			},
+			init.interval ?? 5000,
+			5 * 60 * 1000
+		).catch(() => {
+			console.log(pc.red('Failed to init project (TIMEOUT)'));
 
-				if (check.status === 'done') {
-					process.stdin.off('keypress', h);
-					resolve(check);
-				}
-
-				return delay(check.interval ?? 5000);
-			} catch (e) {
-				console.error('Failed to check project status:', Error(e as string).message);
-
-				cancel();
-			}
-		}, init.interval ?? 5000);
+			process.exit(1);
+		});
 
 		console.log(
 			pc.green('Project created at'),
