@@ -6,6 +6,7 @@ import glob from './commands/glob';
 import init from './commands/init';
 import link from './commands/link';
 import ping from './commands/ping';
+import strip from './commands/strip';
 import sync from './commands/sync';
 import dotype from './commands/type';
 import { createInterface } from './interface';
@@ -43,6 +44,9 @@ switch (int.command?.name) {
 		break;
 	case 'type':
 		await dotype(int);
+		break;
+	case 'strip':
+		await strip(int);
 		break;
 	case 'stow': {
 		switch (int.subcommand?.name) {

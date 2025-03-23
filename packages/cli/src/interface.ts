@@ -111,6 +111,21 @@ const commands = [
 		subcommands: []
 	},
 	{
+		name: 'strip',
+		shortName: 'r',
+		description: 'Generate a blank environment file, stripping all secrets',
+		flags: [
+			{
+				name: 'file',
+				description: 'The file to strip',
+				allowSolo: true,
+				expectsValue: true,
+				required: true
+			}
+		],
+		subcommands: []
+	},
+	{
 		name: 'stow',
 		shortName: 'k',
 		description: 'Manage your authentication methods',
