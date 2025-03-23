@@ -22,7 +22,7 @@ export const defaultConfig: Config = {
 	authority: '@onlynv/platform',
 	connection: '',
 	apispec: 1,
-	exclude: ['**/*.local'],
+	exclude: ['**/*.local', '**/*.example'],
 	include: ['**/.env*']
 };
 
