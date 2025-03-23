@@ -1,7 +1,7 @@
 import pc from '@onlynv/shared/colors';
 import { createSpinner } from 'nanospinner';
 import { privateDecrypt, publicEncrypt } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
 import path from 'node:path';
 
@@ -11,6 +11,62 @@ import { getConfig } from '../util/config';
 import { getKey } from '../util/storage';
 import { resolveWorkspace } from '../util/workspace';
 import glob from './glob';
+
+const getAssociatedTemplateFile = (file: string) => {
+	if (existsSync(path.resolve(file + '.example'))) {
+		return file + '.example';
+	}
+
+	if (existsSync(path.resolve(file + '.template'))) {
+		return file + '.template';
+	}
+
+	const [name, ext] = file.split('.');
+
+	if (existsSync(path.resolve(name + '.example.' + ext))) {
+		return name + '.example.' + ext;
+	}
+
+	return null;
+};
+
+type TemplateVariable = {
+	type: 'variable';
+	name: string;
+};
+
+type TemplateComment = {
+	type: 'comment';
+	value: string;
+};
+
+type TemplateWhitespace = {
+	type: 'whitespace';
+};
+
+type TemplateComponent = TemplateVariable | TemplateComment | TemplateWhitespace;
+
+const parseTemplate = (file: string) => {
+	const template = readFileSync(file, 'utf-8').split('\n');
+
+	const parsed: TemplateComponent[] = [];
+
+	for (const line of template) {
+		if (line.startsWith('#')) {
+			parsed.push({ type: 'comment', value: line });
+		} else if (line === '') {
+			parsed.push({ type: 'whitespace' });
+		} else {
+			const [key] = line.split('=');
+
+			if (!key) continue;
+
+			parsed.push({ type: 'variable', name: key });
+		}
+	}
+
+	return parsed;
+};
 
 export default async (int: Interface) => {
 	const workspace = resolveWorkspace();
@@ -201,7 +257,7 @@ Please re-authenticate with 'nv link'`
 
 	const newData = JSON.parse(json) as Record<
 		string,
-		Record<string, { value: string; local: string; production: string }>
+		Record<string, { value: string; local: boolean; production: boolean }>
 	>;
 
 	newDataSpinner.success({ text: pc.green('Decrypted data from server') });
@@ -214,7 +270,11 @@ Please re-authenticate with 'nv link'`
 			continue;
 		}
 
-		writeFileSync(path.resolve(workspace, file), assembleEnv(content));
+		const templateFile = getAssociatedTemplateFile(path.resolve(workspace, file));
+
+		const assembled = assembleEnv(content, templateFile);
+
+		writeFileSync(path.resolve(workspace, file), assembled);
 	}
 
 	console.log(pc.green('Synced project'));
@@ -226,19 +286,74 @@ Please re-authenticate with 'nv link'`
 	process.exit(0);
 };
 
-const envSort = (a: [string, { value: string }], b: [string, { value: string }]) =>
-	a[0].localeCompare(b[0]);
-
 const assembleEnv = (
-	content: Record<string, { value: string; local: string; production: string }>
+	content: Record<string, { value: string; local: boolean; production: boolean }>,
+	templateFile: string | null
 ) => {
 	let env = '';
 
-	for (const [key, { value }] of Object.entries(content).sort(envSort)) {
-		if (/[\s]/.test(value)) {
-			env += `${key}="${value}"\n`;
-		} else {
-			env += `${key}=${value}\n`;
+	if (!templateFile) {
+		for (const [key, values] of Object.entries(content)) {
+			const normalisedName = key.replace(/^(local|production):/, '');
+
+			if (values.local) {
+				env += `${normalisedName}=${values.value}\n`;
+			}
+
+			if (values.production) {
+				env += `production:${normalisedName}=${values.value}\n`;
+			}
+		}
+	} else {
+		const template = parseTemplate(templateFile);
+
+		const used: string[] = [];
+
+		for (const component of template) {
+			if (component.type === 'variable') {
+				const allValues = Object.entries(content).filter(
+					([key]) =>
+						key.replace(/^(local|production):/, '') ===
+						component.name.replace(/^(local|production):/, '')
+				);
+
+				if (allValues.length === 0) {
+					env += `${component.name}=\n`;
+					continue;
+				}
+
+				const values = allValues.map(([name, { value }]) => [name, value]);
+
+				for (const [name, value] of values) {
+					env += `${name}=${value}\n`;
+				}
+
+				used.push(component.name.replace(/^(local|production):/, ''));
+			}
+
+			if (component.type === 'comment') {
+				env += component.value + '\n';
+			}
+
+			if (component.type === 'whitespace') {
+				env += '\n';
+			}
+		}
+
+		const unused = Object.entries(content).filter(
+			([key]) => !used.includes(key.replace(/^(local|production):/, ''))
+		);
+
+		for (const [key, values] of unused) {
+			const normalisedName = key.replace(/^(local|production):/, '');
+
+			if (values.local) {
+				env += `${normalisedName}=${values.value}\n`;
+			}
+
+			if (values.production) {
+				env += `production:${normalisedName}=${values.value}\n`;
+			}
 		}
 	}
 
