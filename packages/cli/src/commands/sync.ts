@@ -294,15 +294,7 @@ const assembleEnv = (
 
 	if (!templateFile) {
 		for (const [key, values] of Object.entries(content)) {
-			const normalisedName = key.replace(/^(local|production):/, '');
-
-			if (values.local) {
-				env += `${normalisedName}=${values.value}\n`;
-			}
-
-			if (values.production) {
-				env += `production:${normalisedName}=${values.value}\n`;
-			}
+			env += `${key}=${values.value}\n`;
 		}
 	} else {
 		const template = parseTemplate(templateFile);
