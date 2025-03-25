@@ -8,10 +8,20 @@ import type { Interface } from '../interface';
 import { resolveWorkspace } from '../util/workspace';
 import glob from './glob';
 
+const testId = (key: string) => {
+	const identifier = /^[$_\p{ID_Start}][$_\u200C\u200D\p{ID_Continue}]*$/u;
+
+	if (!identifier.test(key)) {
+		return `['${key.replaceAll("'", "\\'")}']`;
+	}
+
+	return key;
+};
+
 const generateTs = (data: string[]) => {
 	return `declare namespace NodeJS {
   interface ProcessEnv {
-${data.map((key) => `    ['${key.replaceAll("'", "\\'")}']?: string`).join('\n')}
+${data.map((key) => `    ${testId(key)}?: string`).join('\n')}
   }
 }
 // NOTE: This file should not be edited directly. It is generated from the 'nv type' command.`;
@@ -20,7 +30,7 @@ ${data.map((key) => `    ['${key.replaceAll("'", "\\'")}']?: string`).join('\n')
 const generateBun = (data: string[]) => {
 	return `declare module "bun" {
   interface Env {
-${data.map((key) => `    ['${key.replaceAll("'", "\\'")}']?: string`).join('\n')}
+${data.map((key) => `    ${testId(key)}?: string`).join('\n')}
   }
 }
 // NOTE: This file should not be edited directly. It is generated from the 'nv type' command.`;
