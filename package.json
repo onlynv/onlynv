@@ -9,13 +9,13 @@
 		"nv": "node ./packages/cli/dist/bin.js"
 	},
 	"devDependencies": {
-		"@arethetypeswrong/cli": "^0.15.4",
-		"@eslint/eslintrc": "^3.2.0",
-		"@eslint/js": "^9.20.0",
-		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
-		"eslint": "^9.20.1",
-		"prettier": "^3.2.5",
-		"turbo": "^2.0.14"
+		"@arethetypeswrong/cli": "^0.17.4",
+		"@eslint/eslintrc": "^3.3.1",
+		"@eslint/js": "^9.23.0",
+		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
+		"eslint": "^9.23.0",
+		"prettier": "^3.5.3",
+		"turbo": "^2.4.4"
 	},
 	"packageManager": "pnpm@9.3.0",
 	"engines": {
