@@ -1,6 +1,8 @@
 {
 	"name": "@onlynv/cli",
 	"version": "0.0.2",
+	"author": "TheCommieAxolotl",
+	"license": "MIT",
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite build --watch",
@@ -13,6 +15,13 @@
 	"main": "./dist/bin.js",
 	"bin": {
 		"nv": "./dist/bin.js"
+	},
+	"repository": {
+		"url": "https://github.com/onlynv/onlynv",
+		"type": "git"
+	},
+	"bugs": {
+		"url": "https://github.com/onlynv/onlynv/issues"
 	},
 	"devDependencies": {
 		"@onlynv/shared": "workspace:*",
