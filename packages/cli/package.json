@@ -3,6 +3,13 @@
 	"version": "0.0.2",
 	"author": "TheCommieAxolotl",
 	"license": "MIT",
+	"keywords": [
+		"dotenv",
+		"env",
+		"variable",
+		"cli",
+		"onlynv"
+	],
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite build --watch",
