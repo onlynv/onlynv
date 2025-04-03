@@ -29,8 +29,7 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
             - run: pnpm build
-            # - run: cd packages/cli && pnpm publish --provenance --access public
-            - run: cd packages/cli && pnpm publish --access public
+            - run: cd packages/cli && pnpm publish --provenance --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-                  #   NPM_CONFIG_PROVENANCE: true
+                  NPM_CONFIG_PROVENANCE: true
