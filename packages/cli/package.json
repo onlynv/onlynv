@@ -1,6 +1,6 @@
 {
 	"name": "@onlynv/cli",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite build --watch",
