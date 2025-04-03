@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 
-export const resolveWorkspace = (dir = process.cwd(), fail = true): string => {
+export const resolveWorkspace = (dir = process.cwd(), fail = false): string => {
 	let workspace = dir;
 
 	while (!existsSync(join(workspace, '.lnvrc'))) {

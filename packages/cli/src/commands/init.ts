@@ -61,7 +61,7 @@ export default async (int: Interface) => {
 	const workspace = resolveWorkspace(process.cwd(), false);
 
 	const URL = getAuthority({
-		authority: (int.flags.authority as string) || '@onlynv/platform'
+		authority: (int.flags.authority as string).trim() || '@onlynv/platform'
 	});
 
 	if (workspace && workspace === process.cwd()) {
