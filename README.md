@@ -5,9 +5,27 @@
     OnlyNv
     </h1>
     <em>What if your .env was the only .env?</em>
+    <span> • </span>
+    <a href="https://docs.onlynv.dev">Documentation</a>
 </div>
 
 <br>
+
+## Get Started
+
+First, create an account at [OnlyNv](https://onlynv.dev).
+
+Then, install the CLI globally:
+
+```bash
+npm install -g @onlynv/cli
+```
+
+Finally, initialise in your project and follow the prompts:
+
+```bash
+nv init
+```
 
 ## About
 
