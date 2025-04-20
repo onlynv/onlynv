@@ -1,4 +1,6 @@
 authority: '@onlynv/platform'
 connection: '-_vSfnYYk_6RdhyY2HNxZ'
 apispec: 1
-exclude: '**/test/**/*'
+exclude: 
+    - '**/test/**/*'
+    - '**/*.example'
