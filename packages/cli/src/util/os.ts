@@ -1,7 +1,14 @@
 import cp from 'node:child_process';
 import os from 'node:os';
 
+const censorEnv =
+	process.env.CENSOR === 'true' || process.env.CENSOR === '1' || process.env.CENSOR === 'yes';
+
 export const getDeviceName = () => {
+	if (censorEnv) {
+		return "Someone's device";
+	}
+
 	try {
 		switch (process.platform) {
 			case 'win32':
@@ -34,6 +41,10 @@ export const getOS = () => {
 };
 
 export const getIp = () => {
+	if (censorEnv) {
+		return 'Unknown';
+	}
+
 	const interfaces = os.networkInterfaces();
 
 	for (const key in interfaces) {
