@@ -1,7 +1,7 @@
 {
 	"name": "@onlynv/cli",
 	"description": "The OnlyNv CLI provides a conventient interface to communicate with your OnlyNv authority.",
-	"version": "0.0.6",
+	"version": "0.1.0",
 	"author": "TheCommieAxolotl",
 	"license": "MIT",
 	"keywords": [
