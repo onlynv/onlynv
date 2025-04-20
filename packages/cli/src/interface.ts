@@ -60,10 +60,24 @@ const commands = [
 		subcommands: []
 	},
 	{
+		name: 'open',
+		shortName: 'o',
+		description: 'Open the project in the browser',
+		flags: [],
+		subcommands: []
+	},
+	{
 		name: 'sync',
 		shortName: 's',
 		description: 'Sync your environment downstream',
 		flags: [
+			{
+				name: 'strategy',
+				description: 'The strategy to use for syncing',
+				allowSolo: true,
+				expectsValue: true,
+				required: false
+			},
 			{
 				name: 'dry-run',
 				description: 'Dry run the command',
@@ -74,15 +88,8 @@ const commands = [
 			{
 				name: 'skip-ci',
 				description: 'Skip CI sync',
-				allowSolo: true,
+				allowSolo: false,
 				expectsValue: false,
-				required: false
-			},
-			{
-				name: 'strategy',
-				description: 'The strategy to use for syncing',
-				allowSolo: true,
-				expectsValue: true,
 				required: false
 			}
 		],

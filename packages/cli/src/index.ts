@@ -5,6 +5,7 @@ import pkj from '../package.json';
 import glob from './commands/glob';
 import init from './commands/init';
 import link from './commands/link';
+import open from './commands/open';
 import ping from './commands/ping';
 import strip from './commands/strip';
 import sync from './commands/sync';
@@ -47,6 +48,9 @@ switch (int.command?.name) {
 		break;
 	case 'strip':
 		await strip(int);
+		break;
+	case 'open':
+		await open(int);
 		break;
 	case 'stow': {
 		switch (int.subcommand?.name) {
