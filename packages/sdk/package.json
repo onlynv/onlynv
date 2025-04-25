@@ -13,8 +13,7 @@
 	],
 	"scripts": {
 		"build": "vite build",
-		"dev": "vite build --watch",
-		"test": "vitest"
+		"dev": "vite build --watch"
 	},
 	"files": [
 		"dist"

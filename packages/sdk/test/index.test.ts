@@ -1,6 +1,6 @@
+import { config } from 'onlynv';
 import { describe, expect, test } from 'vitest';
 
-import { config } from '../../onlynv';
 import { type Credentials, OnlyNv } from '../src';
 
 config();
