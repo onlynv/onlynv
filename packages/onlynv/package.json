@@ -32,13 +32,11 @@
 	"exports": {
 		".": {
 			"import": "./dist/index.js",
-			"require": "./dist/index.cjs",
-			"types": "./index.d.ts"
+			"require": "./dist/index.cjs"
 		},
 		"./config": {
 			"import": "./dist/config.js",
-			"require": "./dist/config.cjs",
-			"types": "./index.d.ts"
+			"require": "./dist/config.cjs"
 		}
 	},
 	"devDependencies": {
