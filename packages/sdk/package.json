@@ -1,0 +1,51 @@
+{
+	"name": "@onlynv/sdk",
+	"description": "",
+	"version": "0.0.0",
+	"author": "TheCommieAxolotl",
+	"license": "MIT",
+	"keywords": [
+		"dotenv",
+		"env",
+		"variable",
+		"sdk",
+		"onlynv"
+	],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"test": "vitest"
+	},
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		}
+	},
+	"repository": {
+		"url": "https://github.com/onlynv/onlynv",
+		"type": "git"
+	},
+	"bugs": {
+		"url": "https://github.com/onlynv/onlynv/issues"
+	},
+	"devDependencies": {
+		"@onlynv/shared": "workspace:*",
+		"@onlynv/tsconfig": "workspace:*",
+		"@types/js-yaml": "^4.0.9",
+		"@types/node": "^22.14.1",
+		"onlynv": "workspace:*",
+		"typescript": "^5.8.3",
+		"vite": "^6.2.6",
+		"vitest": "^3.1.1"
+	},
+	"dependencies": {
+		"js-yaml": "^4.1.0"
+	}
+}
